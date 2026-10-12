@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vas.Application\Vas.Application.csproj" />
+    <ProjectReference Include="..\Vas.Domain\Vas.Domain.csproj" />
+    <ProjectReference Include="..\Vas.Shared\Vas.Shared.csproj" />
+  </ItemGroup>
+</Project>

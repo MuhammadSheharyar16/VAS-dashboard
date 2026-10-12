@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\Vas.Application\Vas.Application.csproj" />
+    <ProjectReference Include="..\Vas.Infrastructure\Vas.Infrastructure.csproj" />
+    <ProjectReference Include="..\Vas.Shared\Vas.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Serilog.AspNetCore" />
+  </ItemGroup>
+</Project>

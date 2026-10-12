@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Vas.Api/Vas.Api.csproj" />
+    <Project Path="src/Vas.Application/Vas.Application.csproj" />
+    <Project Path="src/Vas.Domain/Vas.Domain.csproj" />
+    <Project Path="src/Vas.Infrastructure/Vas.Infrastructure.csproj" />
+    <Project Path="src/Vas.Shared/Vas.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Vas.ApiTests/Vas.ApiTests.csproj" />
+    <Project Path="tests/Vas.ApplicationTests/Vas.ApplicationTests.csproj" />
+    <Project Path="tests/Vas.UnitTests/Vas.UnitTests.csproj" />
+  </Folder>
+</Solution>
