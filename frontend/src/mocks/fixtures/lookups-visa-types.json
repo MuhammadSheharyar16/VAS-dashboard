@@ -1,0 +1,42 @@
+[
+  {
+    "code": "BUS",
+    "name": "Business",
+    "group": "Short stay"
+  },
+  {
+    "code": "WORK",
+    "name": "Employment",
+    "group": "Long stay"
+  },
+  {
+    "code": "FAM",
+    "name": "Family Visit",
+    "group": "Short stay"
+  },
+  {
+    "code": "MED",
+    "name": "Medical",
+    "group": "Short stay"
+  },
+  {
+    "code": "RES",
+    "name": "Residence",
+    "group": "Long stay"
+  },
+  {
+    "code": "STU",
+    "name": "Student",
+    "group": "Long stay"
+  },
+  {
+    "code": "TOUR",
+    "name": "Tourist",
+    "group": "Short stay"
+  },
+  {
+    "code": "TRAN",
+    "name": "Transit",
+    "group": "Short stay"
+  }
+]

@@ -1,0 +1,292 @@
+{
+  "meta": {
+    "generatedAtUtc": "2026-10-12T02:00:00Z",
+    "dataSource": "Mock",
+    "freshness": {
+      "lastRefreshedAtUtc": "2026-10-12T02:00:00Z"
+    },
+    "filter": {
+      "from": "2026-09-12",
+      "toExclusive": "2026-10-12",
+      "countryCode": null,
+      "centreCode": null,
+      "visaTypeCode": null,
+      "compare": "PreviousPeriod",
+      "previousFrom": "2026-08-13",
+      "previousToExclusive": "2026-09-12"
+    },
+    "thresholdsArePlaceholders": true
+  },
+  "kpis": [
+    {
+      "key": "averageTurnaroundDays",
+      "value": 6.4,
+      "unit": "Days",
+      "currency": null,
+      "previousValue": 9.1,
+      "changePercent": -29.7,
+      "trend": "Down",
+      "status": "Good"
+    },
+    {
+      "key": "digitalTurnaroundDays",
+      "value": 5.8,
+      "unit": "Days",
+      "currency": null,
+      "previousValue": 7.4,
+      "changePercent": -21.6,
+      "trend": "Down",
+      "status": "Neutral"
+    },
+    {
+      "key": "centreTurnaroundDays",
+      "value": 7.6,
+      "unit": "Days",
+      "currency": null,
+      "previousValue": 11.2,
+      "changePercent": -32.1,
+      "trend": "Down",
+      "status": "Neutral"
+    },
+    {
+      "key": "digitalSharePercent",
+      "value": 57.8,
+      "unit": "Percent",
+      "currency": null,
+      "previousValue": 56.1,
+      "changePercent": 3.0,
+      "trend": "Up",
+      "status": "Neutral"
+    }
+  ],
+  "statuses": [
+    {
+      "key": "Closed",
+      "count": 553,
+      "sharePercent": 47.2
+    },
+    {
+      "key": "Pending",
+      "count": 353,
+      "sharePercent": 30.1
+    },
+    {
+      "key": "Processed",
+      "count": 265,
+      "sharePercent": 22.6
+    }
+  ],
+  "pendingByStage": [
+    {
+      "key": "Submitted",
+      "count": 30,
+      "sharePercent": 8.5
+    },
+    {
+      "key": "DocumentCheck",
+      "count": 95,
+      "sharePercent": 26.9
+    },
+    {
+      "key": "Biometrics",
+      "count": 67,
+      "sharePercent": 19.0
+    },
+    {
+      "key": "Review",
+      "count": 144,
+      "sharePercent": 40.8
+    },
+    {
+      "key": "Decision",
+      "count": 17,
+      "sharePercent": 4.8
+    }
+  ],
+  "stageFunnel": [
+    {
+      "stage": "Submitted",
+      "reached": 1171,
+      "completed": 1141,
+      "completionPercent": 97.4
+    },
+    {
+      "stage": "DocumentCheck",
+      "reached": 1141,
+      "completed": 1046,
+      "completionPercent": 91.7
+    },
+    {
+      "stage": "Biometrics",
+      "reached": 1046,
+      "completed": 979,
+      "completionPercent": 93.6
+    },
+    {
+      "stage": "Review",
+      "reached": 979,
+      "completed": 835,
+      "completionPercent": 85.3
+    },
+    {
+      "stage": "Decision",
+      "reached": 835,
+      "completed": 818,
+      "completionPercent": 98.0
+    }
+  ],
+  "channels": [
+    {
+      "key": "Digital",
+      "name": "Digital",
+      "group": null,
+      "received": 677,
+      "processed": 521,
+      "pending": 156,
+      "approved": 413,
+      "rejected": 83,
+      "withdrawn": 25,
+      "approvalRate": 83.3,
+      "rejectionRate": 16.7,
+      "averageTurnaroundDays": 5.8,
+      "sharePercent": 57.8
+    },
+    {
+      "key": "Centre",
+      "name": "Centre",
+      "group": null,
+      "received": 494,
+      "processed": 297,
+      "pending": 197,
+      "approved": 237,
+      "rejected": 48,
+      "withdrawn": 12,
+      "approvalRate": 83.2,
+      "rejectionRate": 16.8,
+      "averageTurnaroundDays": 7.6,
+      "sharePercent": 42.2
+    }
+  ],
+  "turnaroundByVisaType": [
+    {
+      "key": "TOUR",
+      "name": "Tourist",
+      "group": "Short stay",
+      "received": 357,
+      "processed": 296,
+      "pending": 61,
+      "approved": 243,
+      "rejected": 43,
+      "withdrawn": 10,
+      "approvalRate": 85.0,
+      "rejectionRate": 15.0,
+      "averageTurnaroundDays": 4.8,
+      "sharePercent": 30.5
+    },
+    {
+      "key": "BUS",
+      "name": "Business",
+      "group": "Short stay",
+      "received": 192,
+      "processed": 157,
+      "pending": 35,
+      "approved": 125,
+      "rejected": 23,
+      "withdrawn": 9,
+      "approvalRate": 84.5,
+      "rejectionRate": 15.5,
+      "averageTurnaroundDays": 5.7,
+      "sharePercent": 16.4
+    },
+    {
+      "key": "FAM",
+      "name": "Family Visit",
+      "group": "Short stay",
+      "received": 186,
+      "processed": 127,
+      "pending": 59,
+      "approved": 99,
+      "rejected": 23,
+      "withdrawn": 5,
+      "approvalRate": 81.1,
+      "rejectionRate": 18.9,
+      "averageTurnaroundDays": 7.7,
+      "sharePercent": 15.9
+    },
+    {
+      "key": "WORK",
+      "name": "Employment",
+      "group": "Long stay",
+      "received": 134,
+      "processed": 54,
+      "pending": 80,
+      "approved": 37,
+      "rejected": 14,
+      "withdrawn": 3,
+      "approvalRate": 72.5,
+      "rejectionRate": 27.5,
+      "averageTurnaroundDays": 16.9,
+      "sharePercent": 11.4
+    },
+    {
+      "key": "STU",
+      "name": "Student",
+      "group": "Long stay",
+      "received": 90,
+      "processed": 42,
+      "pending": 48,
+      "approved": 31,
+      "rejected": 11,
+      "withdrawn": 0,
+      "approvalRate": 73.8,
+      "rejectionRate": 26.2,
+      "averageTurnaroundDays": 13,
+      "sharePercent": 7.7
+    },
+    {
+      "key": "TRAN",
+      "name": "Transit",
+      "group": "Short stay",
+      "received": 85,
+      "processed": 81,
+      "pending": 4,
+      "approved": 72,
+      "rejected": 4,
+      "withdrawn": 5,
+      "approvalRate": 94.7,
+      "rejectionRate": 5.3,
+      "averageTurnaroundDays": 1.9,
+      "sharePercent": 7.3
+    },
+    {
+      "key": "RES",
+      "name": "Residence",
+      "group": "Long stay",
+      "received": 70,
+      "processed": 10,
+      "pending": 60,
+      "approved": 6,
+      "rejected": 3,
+      "withdrawn": 1,
+      "approvalRate": 66.7,
+      "rejectionRate": 33.3,
+      "averageTurnaroundDays": 17.1,
+      "sharePercent": 6.0
+    },
+    {
+      "key": "MED",
+      "name": "Medical",
+      "group": "Short stay",
+      "received": 57,
+      "processed": 51,
+      "pending": 6,
+      "approved": 37,
+      "rejected": 10,
+      "withdrawn": 4,
+      "approvalRate": 78.7,
+      "rejectionRate": 21.3,
+      "averageTurnaroundDays": 4.0,
+      "sharePercent": 4.9
+    }
+  ]
+}

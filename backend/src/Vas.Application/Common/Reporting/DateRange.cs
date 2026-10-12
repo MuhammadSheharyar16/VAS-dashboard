@@ -6,6 +6,9 @@ public sealed record DateRange(DateOnly From, DateOnly ToExclusive)
     public const int DefaultDays = 30;
     public const int MaxMonths = 24;
 
+    /// <summary>The longest preset period: 24 months of days.</summary>
+    public const int MaxPresetDays = 730;
+
     public int Days => ToExclusive.DayNumber - From.DayNumber;
 
     /// <summary>The range of the same length that ends where this one starts.</summary>

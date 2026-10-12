@@ -1,0 +1,77 @@
+[
+  {
+    "code": "AE-AUH",
+    "name": "Abu Dhabi Centre",
+    "group": "AE"
+  },
+  {
+    "code": "EG-ALX",
+    "name": "Alexandria Centre",
+    "group": "EG"
+  },
+  {
+    "code": "IN-BLR",
+    "name": "Bengaluru Centre",
+    "group": "IN"
+  },
+  {
+    "code": "EG-CAI",
+    "name": "Cairo Centre",
+    "group": "EG"
+  },
+  {
+    "code": "SA-DMM",
+    "name": "Dammam Centre",
+    "group": "SA"
+  },
+  {
+    "code": "AE-DXB",
+    "name": "Dubai Centre",
+    "group": "AE"
+  },
+  {
+    "code": "SA-JED",
+    "name": "Jeddah Centre",
+    "group": "SA"
+  },
+  {
+    "code": "PK-KHI",
+    "name": "Karachi Centre",
+    "group": "PK"
+  },
+  {
+    "code": "PK-LHE",
+    "name": "Lahore Centre",
+    "group": "PK"
+  },
+  {
+    "code": "GB-LON",
+    "name": "London Centre",
+    "group": "GB"
+  },
+  {
+    "code": "GB-MAN",
+    "name": "Manchester Centre",
+    "group": "GB"
+  },
+  {
+    "code": "IN-BOM",
+    "name": "Mumbai Centre",
+    "group": "IN"
+  },
+  {
+    "code": "IN-DEL",
+    "name": "New Delhi Centre",
+    "group": "IN"
+  },
+  {
+    "code": "SA-RUH",
+    "name": "Riyadh Centre",
+    "group": "SA"
+  },
+  {
+    "code": "AE-SHJ",
+    "name": "Sharjah Centre",
+    "group": "AE"
+  }
+]

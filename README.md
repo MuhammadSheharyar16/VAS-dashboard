@@ -14,7 +14,8 @@ A React dashboard and an ASP.NET Core reporting API, shipped as one container on
 | Executive Summary endpoint | Done on mock data, with provisional KPI definitions ([docs/kpi-mapping.md](docs/kpi-mapping.md)) |
 | VAS report endpoints and lookups | Done on mock data: applications, outcomes, processing, revenue, visa types, centres |
 | Container image | Builds and runs; `/healthz` verified inside it |
-| React frontend (`web/`) | Not started |
+| React frontend (`frontend/`) | Done on mock fixtures: shell, Executive Summary, VAS with six sections, Coming Soon, access-denied and not-found pages |
+| Real sign-in in the browser | Written (MSAL React), never run against a tenant |
 | Fabric connection | Waits for the Gold layer |
 
 ## Layout
@@ -35,6 +36,16 @@ backend/                 everything .NET
     Vas.ApplicationTests/    services
     Vas.ApiTests/            the running API: auth, envelopes, status codes
   mock-data/generator/       writes the mock JSON files from a fixed seed
+  mock-data/fixture-exporter/  writes the frontend's fixtures from the real services
+frontend/                the React app
+  PROJECT_LOCK.md            frozen frontend decisions
+  src/
+    app/                     routes, shell, providers (thin)
+    core/                    config, http client, sign-in, text, theme tokens, sanitisers
+    shared/                  components, hooks, formatting
+    features/                executive-summary, vas, session, filters (screen + view-model + repository)
+    mocks/                   fixtures used when VITE_USE_MOCK=true
+  tests/                     unit, component, integration (Playwright)
 docs/                    setup guides and the KPI mapping
 Dockerfile               the one image
 docker-compose.yml       run that image locally
@@ -45,6 +56,34 @@ docker-compose.yml       run that image locally
 
 - .NET SDK 10
 - Docker Desktop, only if you want to run the container
+
+## Run the web app
+
+Needs Node 22.
+
+```bash
+cd frontend
+cp .env.example .env      # once
+npm install               # once
+npm run dev
+```
+
+It opens on `http://localhost:5173` (Vite picks the next free port if that one is taken, and prints it). With `VITE_USE_MOCK=true`, the default, it needs no backend and no sign-in: it shows fixtures and a sample user, and a "Mock data" badge says so. The filters work and are kept in the URL, but the mock figures are one fixed export, so they do not change with the filters.
+
+With `VITE_USE_MOCK=false` it calls the API on port 5080 through the dev proxy and signs in with Microsoft Entra ID. That needs the tenant set up ([docs/entra-setup.md](docs/entra-setup.md)).
+
+| Command (in `frontend/`) | Purpose |
+| --- | --- |
+| `npm run lint` | ESLint, including the no-console rule |
+| `npm run build` | Type-check and production build |
+| `npm test` | Unit and component tests |
+| `npm run test:integration` | Browser tests on fixtures. Run `npx playwright install chromium` once first |
+
+When the API's response shapes change, regenerate the fixtures from the real services:
+
+```bash
+dotnet run --project backend/mock-data/fixture-exporter -- frontend/src/mocks/fixtures backend/src/Vas.Api/appsettings.json
+```
 
 ## Run the API
 
@@ -102,7 +141,7 @@ It serves on `http://localhost:8080`. Copy `.env.example` to `.env` to set value
 docker run --rm -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development vas-dashboard:local
 ```
 
-Until the React app is built into the image, `http://localhost:8080/` shows a one-line message saying the API is running. To see why a container stopped, run `docker compose logs` (or `docker logs <name>`).
+The image contains the React app and the API on one origin. Compose builds the web app in mock mode (`VITE_USE_MOCK=true`), so `http://localhost:8080/` shows the full dashboard on fixtures with no sign-in. An image built without that argument, which is what gets deployed, always signs in with Entra ID. To see why a container stopped, run `docker compose logs` (or `docker logs <name>`).
 
 ## Configuration
 

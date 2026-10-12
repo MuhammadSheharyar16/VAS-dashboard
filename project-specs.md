@@ -32,7 +32,7 @@ The factory guides are **guidelines**. They decide structure and code quality on
 | Phase 1 placeholders | **Operations, Finance, Alfit** as "Coming Soon" navigation, no reporting; **CSAT** shown as Coming Soon |
 | Delivery parties | AEGI (client) and LogicEra (delivery) |
 | Repository | New build in this repository. No starter project and no code from `VAS-demo-project` is used |
-| Repository layout | Everything backend-related lives in `backend/` (solution file, build props, `src/`, `tests/`, mock-data generator). The frontend lives in `web/` |
+| Repository layout | Everything backend-related lives in `backend/` (solution file, build props, `src/`, `tests/`, mock-data generator). The frontend lives in `frontend/` |
 
 ## 2. Phase 1 functional requirements
 
@@ -91,7 +91,7 @@ The Fabric Gold layer is **not available yet**. Development, demos and automated
 | --- | --- | --- |
 | Mock files | Gold-shaped rows as JSON, one file per Gold object (`dim_country.json`, `fact_visa_application.json.gz`, ...; the three fact files are gzip-compressed), embedded in `backend/src/Vas.Infrastructure/MockData/`. A fixed-seed generator in `backend/mock-data/generator/` writes them | Not used |
 | Backend | `IReportingDbContext` exposes one `IQueryable<T>` per Gold object. Services write their KPI queries once in LINQ. With `DataSource=Mock`, `JsonReportingSource` serves the JSON rows in memory through an async-capable query provider, so the same async LINQ runs on both sources; with `DataSource=Fabric`, the EF Core `ReportingDbContext` serves the same `IQueryable<T>` from the SQL endpoint | Set `DataSource=Fabric` and the Fabric connection; adjust the `ToView`/column mappings in `Infrastructure/Persistence/Configurations/` to the real Gold names |
-| Frontend | `VITE_USE_MOCK=true` uses JSON fixtures in `web/src/mocks/` behind the same repository interface as the live API, for UI work without the backend. In this mode only, the frontend uses a fake signed-in user | `VITE_USE_MOCK=false` |
+| Frontend | `VITE_USE_MOCK=true` uses JSON fixtures in `frontend/src/mocks/` behind the same repository interface as the live API, for UI work without the backend. In this mode only, the frontend uses a fake signed-in user | `VITE_USE_MOCK=false` |
 | Tests | Unit and application tests run every service against the JSON source | Add SQL translation tests against the real endpoint once Fabric is available |
 
 **What this does and doesn't prove:** the KPI logic (the LINQ in each service) runs on mock data from day one. The SQL that EF Core generates from it, and its performance on Fabric, are only exercised once the Gold layer is available. In-memory LINQ can also differ from SQL on nulls, text casing and division, so passing mock tests do not prove Fabric results. That is milestone M2 in section 8, and the first thing to test when Fabric arrives.
@@ -198,7 +198,7 @@ One phase is built at a time. After each phase: changed files, tests run, and ga
 
 | Phase | Work | Acceptance check |
 | --- | --- | --- |
-| 0 Setup | Solution, five projects, three test projects, `web/` scaffold, `web/PROJECT_LOCK.md`, Dockerfile, compose, GitHub Actions, `docs/`, rate limiter, sanitiser stubs | `docker compose up --build` serves the shell; `/healthz` returns 200; `dotnet test` and `npm test` pass; production web build succeeds |
+| 0 Setup | Solution, five projects, three test projects, `frontend/` scaffold, `frontend/PROJECT_LOCK.md`, Dockerfile, compose, GitHub Actions, `docs/`, rate limiter, sanitiser stubs | `docker compose up --build` serves the shell; `/healthz` returns 200; `dotnet test` and `npm test` pass; production web build succeeds |
 | 1 Entra auth | Token validation, permission policy over the app role, `/auth/me`, `/auth/me/permissions`, `/auth/me/menu`, MSAL guard, 403 and 404 pages | No token gets 401; a signed-in user without the role gets 403; an assigned user sees the shell (M1 once Entra IDs exist) |
 | 2 Data layer | Mock generator, JSON source, `IReportingDbContext`, `KpiThresholds`, Executive Summary slice end to end, then the six VAS services and lookups | Every service has unit and application tests on the JSON source; responses report `dataSource`; Mock is refused in UAT and Production |
 | 3 Dashboard UI | Design mockup approved first; then tokens, shared components, filter bar in the URL, Executive Summary, six VAS sections, Coming Soon, Mock badge | Every Phase 1 KPI renders with filters at desktop and tablet widths; loading, empty and error states work |
@@ -231,6 +231,9 @@ One phase is built at a time. After each phase: changed files, tests run, and ga
 | Security guide s.6: access token in memory | MSAL `sessionStorage` cache | Memory forces a new sign-in round trip on every page reload |
 | Security guide: config only from build env | API base URL from env; Entra IDs served at runtime by `/config.json` | One image for every environment |
 | Frontend OS s.1, s.3: UI comes from Figma and is never invented | Claude designs the screens; Sheharyar approves them | No Figma exists (explicit instruction, 12 Oct 2026) |
+| Frontend OS s.3 rule 8 and WebApps guide s.2: no animation package without approval | `motion` for transitions and `three` for one 3D globe | Explicit instruction: "3D and animated" (12 Oct 2026) |
+| Frontend OS s.3 rule 1: no code before the lock is confirmed | The screens were built straight from the Q&A decisions; `frontend/PROJECT_LOCK.md` records them | Explicit instruction to create the frontend |
+| Implementation Guide: frontend in `web/` | `frontend/` | Explicit instruction |
 | Frontend OS s.4: EN + AR with RTL recommended for MENA products | English only; logical CSS for a later RTL | Section 6 |
 | Security guide s.4: sanitisation rules come from the BRD | The requirements give none; the filter limits in section 2.1 apply | Decision, 12 Oct 2026 |
 | QA baseline s.5, QAB-001: lock a QA profile | No profile fits a non-AI dashboard. Exception: apply only the non-AI parts (baseline traceability and release gates, functional testing, API contracts, authorisation and privacy tests, performance testing). Owner and approver: Sheharyar | The QA profiles are for AI systems |
@@ -313,5 +316,13 @@ Closed on 12 Oct 2026: 7 (no Figma; own designs), 8 (English only), 9 (Recharts)
 | F | The three large mock fact files are stored gzip-compressed (`fact_*.json.gz`); the dimension files and the refresh log stay plain JSON. The folder is 0.9 MB instead of 24 MB | Section 3.1 still holds: one JSON file per Gold object, embedded in the API. Only the storage of three of them changed |
 | G | The six VAS reports use provisional definitions too (`docs/kpi-mapping.md`). Time spent per stage is not reported | No KPI Mapping yet; a stage duration needs a Gold column, because date arithmetic cannot run from one query on both sources |
 | H | The centres table is aggregated per centre in the database, then sorted and paged in the API | Capacity use is calculated from the aggregate and the centre dimension; the row count is the number of centres |
+| J | Every report accepts `lastDays` (1 to 730) as an alternative to a date range: that many complete days ending at the last data refresh | The frontend's period presets need the same anchor as the default view; a browser cannot know the refresh date before its first request |
+| K | The frontend lives in `frontend/`, not `web/` (Sheharyar's instruction) | |
+| L | The design has depth and motion (Sheharyar's instruction: "3D and animated"): pointer-tilt KPI cards, a rotating 3D globe of the top countries, animated numbers and transitions. All of it switches off under `prefers-reduced-motion`. Adds `motion` and `three`; three.js is downloaded only with the globe panel | Explicit instruction. Recorded in `frontend/PROJECT_LOCK.md` |
+| M | Light is the default theme; dark is available from the toggle (Sheharyar's preference) | |
+| N | In frontend mock mode the fixtures are one fixed export of the backend's real output. The chosen filters are shown and echoed back, but the figures do not change | Mock-mode filtering would mean re-implementing the KPI logic in React, which the specs forbid |
+| O | `docker compose` builds the web app with `VITE_USE_MOCK=true` so the dashboard can be seen locally without a tenant. A deployed image is built without that argument and always signs in | The local image would otherwise redirect to a sign-in that cannot succeed |
+| P | The VAS page shows its six areas as tabs and requests only the open one | Six reports at once is six requests per filter change |
+| Q | Icons are `lucide-react`; the font is Inter, bundled with the app | No request to an external font or icon host |
 | I | Every `/api/v1/vas/...` report needs the `VAS` screen permission; the lookups and `/auth/me` need the `DASHBOARD` permission. The Viewer role has both | One role today, but the screens stay separable |
 | – | The Implementation Guide ranks below this file |

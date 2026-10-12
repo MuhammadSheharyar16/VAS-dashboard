@@ -243,6 +243,39 @@ public class ExecutiveSummaryServiceTests
         Assert.Equal(DateTimeKind.Utc, summary.Meta.Freshness.LastRefreshedAtUtc!.Value.Kind);
     }
 
+    [Theory]
+    [InlineData(7, "2026-06-03")]
+    [InlineData(90, "2026-03-12")]
+    public async Task A_preset_period_ends_at_the_last_successful_refresh(int lastDays, string expectedFrom)
+    {
+        var data = GoldRows.DataSet(Applications, Revenue, refreshLogs: [GoldRows.Refresh("2026-06-10T02:00:00Z")]);
+
+        var summary = await ReportingTestHost.ExecutiveSummary(data)
+            .GetAsync(new ExecutiveSummaryQueryParams { LastDays = lastDays }, CancellationToken.None);
+
+        Assert.Equal(DateOnly.Parse(expectedFrom), summary.Meta.Filter.From);
+        Assert.Equal(new DateOnly(2026, 6, 10), summary.Meta.Filter.ToExclusive);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(731)]
+    public async Task A_preset_period_outside_1_to_730_days_is_rejected(int lastDays)
+    {
+        var exception = await Assert.ThrowsAsync<ValidationException>(
+            () => GetAsync(new ExecutiveSummaryQueryParams { LastDays = lastDays }));
+
+        Assert.Contains(exception.Errors, error => error.PropertyName == nameof(ReportFilter.LastDays));
+    }
+
+    [Fact]
+    public async Task A_preset_period_cannot_be_combined_with_a_date_range()
+    {
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => GetAsync(June with { LastDays = 30 }));
+
+        Assert.Contains(exception.Errors, error => error.PropertyName == nameof(ReportFilter.LastDays));
+    }
+
     [Fact]
     public async Task Default_view_falls_back_to_the_clock_when_no_refresh_is_recorded()
     {

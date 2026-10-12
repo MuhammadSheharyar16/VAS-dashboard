@@ -1,0 +1,32 @@
+[
+  {
+    "code": "EG",
+    "name": "Egypt",
+    "group": "Africa"
+  },
+  {
+    "code": "IN",
+    "name": "India",
+    "group": "South Asia"
+  },
+  {
+    "code": "PK",
+    "name": "Pakistan",
+    "group": "South Asia"
+  },
+  {
+    "code": "SA",
+    "name": "Saudi Arabia",
+    "group": "Middle East"
+  },
+  {
+    "code": "AE",
+    "name": "United Arab Emirates",
+    "group": "Middle East"
+  },
+  {
+    "code": "GB",
+    "name": "United Kingdom",
+    "group": "Europe"
+  }
+]

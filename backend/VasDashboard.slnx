@@ -1,5 +1,8 @@
 <Solution>
   <Folder Name="/mock-data/" />
+  <Folder Name="/mock-data/fixture-exporter/">
+    <Project Path="mock-data/fixture-exporter/Vas.FixtureExporter.csproj" />
+  </Folder>
   <Folder Name="/mock-data/generator/">
     <Project Path="mock-data/generator/Vas.MockDataGenerator.csproj" />
   </Folder>

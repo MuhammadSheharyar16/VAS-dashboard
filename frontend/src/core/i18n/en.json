@@ -1,0 +1,249 @@
+{
+  "app": {
+    "name": "AEGI VAS",
+    "product": "Executive Dashboard",
+    "skipToContent": "Skip to content"
+  },
+  "nav": {
+    "label": "Reporting areas",
+    "comingSoon": "Soon",
+    "EXECUTIVE_SUMMARY": "Executive Summary",
+    "VAS": "VAS",
+    "OPERATIONS": "Operations",
+    "FINANCE": "Finance",
+    "ALFIT": "Alfit",
+    "CSAT": "CSAT"
+  },
+  "topbar": {
+    "themeToLight": "Switch to light theme",
+    "themeToDark": "Switch to dark theme",
+    "signOut": "Sign out",
+    "signedInAs": "Signed in as {name}",
+    "mockBadge": "Mock data",
+    "mockBadgeHint": "Sample figures, not AEGI data. Filters are shown but do not change the figures.",
+    "freshness": "Data as of {time} UTC",
+    "freshnessUnknown": "Data refresh time not available",
+    "placeholderThresholds": "Status thresholds are placeholders"
+  },
+  "filters": {
+    "label": "Report filters",
+    "period": "Period",
+    "period7": "Last 7 days",
+    "period30": "Last 30 days",
+    "period90": "Last 90 days",
+    "period365": "Last 12 months",
+    "periodCustom": "Custom range",
+    "from": "From",
+    "to": "To",
+    "country": "Country",
+    "centre": "Centre",
+    "visaType": "Visa type",
+    "all": "All",
+    "compare": "Compare with previous period",
+    "reset": "Reset filters",
+    "rangeTooLong": "Choose a range of 24 months or less.",
+    "rangeOrder": "The start date must be before the end date."
+  },
+  "state": {
+    "loading": "Loading",
+    "emptyTitle": "No data for this selection",
+    "emptyBody": "There is nothing to show for the period and filters you chose. Try a wider period or reset the filters.",
+    "noMatchesTitle": "No matches",
+    "noMatchesBody": "No rows match the current filters.",
+    "errorTitle": "This report could not be loaded",
+    "errorBody": "Something went wrong while fetching the data. Your filters are unchanged.",
+    "errorNetwork": "The dashboard could not reach the server. Check your connection and try again.",
+    "errorRateLimited": "Too many requests in a short time. Wait a moment and try again.",
+    "errorValidation": "The selected filters are not valid for this report.",
+    "retry": "Try again",
+    "traceId": "Reference: {traceId}"
+  },
+  "kpi": {
+    "applicationsReceived": "Applications received",
+    "applicationsProcessed": "Applications processed",
+    "applicationsPending": "Applications pending",
+    "applicationsApproved": "Approved",
+    "applicationsRejected": "Rejected",
+    "applicationsWithdrawn": "Withdrawn",
+    "approvalRate": "Approval rate",
+    "rejectionRate": "Rejection rate",
+    "averageTurnaroundDays": "Average turnaround",
+    "digitalTurnaroundDays": "Digital turnaround",
+    "centreTurnaroundDays": "Centre turnaround",
+    "digitalSharePercent": "Digital share",
+    "vasRevenue": "VAS revenue",
+    "revenueTransactions": "Transactions",
+    "previous": "Previous period: {value}",
+    "noComparison": "No comparison",
+    "changeUp": "Up {value} on the previous period",
+    "changeDown": "Down {value} on the previous period",
+    "changeFlat": "No change on the previous period",
+    "notAvailable": "Not available"
+  },
+  "unit": {
+    "days": "{value} days",
+    "day": "{value} day",
+    "perDay": "{value} a day"
+  },
+  "status": {
+    "Good": "On track",
+    "Warning": "Watch",
+    "Critical": "Attention",
+    "Neutral": "No threshold"
+  },
+  "outcome": {
+    "Approved": "Approved",
+    "Rejected": "Rejected",
+    "Withdrawn": "Withdrawn",
+    "Pending": "Pending",
+    "Processed": "Processed",
+    "Closed": "Closed"
+  },
+  "stage": {
+    "Submitted": "Submitted",
+    "DocumentCheck": "Document check",
+    "Biometrics": "Biometrics",
+    "Review": "Review",
+    "Decision": "Decision"
+  },
+  "channel": {
+    "Digital": "Digital",
+    "Centre": "Centre"
+  },
+  "series": {
+    "received": "Received",
+    "decided": "Decided",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "withdrawn": "Withdrawn",
+    "revenue": "Revenue",
+    "reached": "Reached",
+    "completed": "Completed"
+  },
+  "chart": {
+    "showTable": "Show as table",
+    "showChart": "Show as chart",
+    "total": "Total",
+    "share": "Share",
+    "period": "Period",
+    "value": "Value"
+  },
+  "executiveSummary": {
+    "title": "Executive Summary",
+    "subtitle": "The headline view of VAS performance for the selected period.",
+    "trendTitle": "Applications over time",
+    "trendSubtitle": "Received and decided applications",
+    "outcomesTitle": "Outcome mix",
+    "outcomesSubtitle": "Share of applications received",
+    "countriesTitle": "Top countries",
+    "countriesSubtitle": "By applications received",
+    "globeLabel": "A rotating globe marking the top countries. The same figures are listed beside it."
+  },
+  "vas": {
+    "title": "VAS",
+    "subtitle": "Detailed reporting across applications, outcomes, processing, revenue, visa types and centres.",
+    "sections": "VAS report sections",
+    "section": {
+      "applications": "Applications",
+      "outcomes": "Outcomes",
+      "processing": "Processing",
+      "revenue": "Revenue",
+      "visa-types": "Visa types",
+      "centres": "Centres"
+    },
+    "applications": {
+      "trendTitle": "Applications over time",
+      "byCountry": "By country",
+      "byVisaType": "By visa type",
+      "byChannel": "By channel"
+    },
+    "outcomes": {
+      "trendTitle": "Outcomes over time",
+      "mixTitle": "Outcome mix",
+      "byVisaType": "Approval rate by visa type",
+      "byCountry": "Approval rate by country"
+    },
+    "processing": {
+      "statusTitle": "Application status",
+      "pendingTitle": "Pending by stage",
+      "funnelTitle": "Stage funnel",
+      "funnelSubtitle": "Applications that reached each stage, and how many have left it",
+      "channelTitle": "Digital and centre journeys",
+      "turnaroundTitle": "Turnaround by visa type"
+    },
+    "revenue": {
+      "trendTitle": "Revenue over time",
+      "byCountry": "By country",
+      "byCentre": "By centre",
+      "byVisaType": "By visa type",
+      "byService": "By service"
+    },
+    "visaTypes": {
+      "tableTitle": "Performance by visa type"
+    },
+    "centres": {
+      "tableTitle": "Centre performance",
+      "capacityTitle": "Capacity use",
+      "capacitySubtitle": "Applications received against daily capacity"
+    }
+  },
+  "column": {
+    "name": "Name",
+    "country": "Country",
+    "city": "City",
+    "category": "Category",
+    "channel": "Channel",
+    "stage": "Stage",
+    "status": "Status",
+    "service": "Service",
+    "received": "Received",
+    "processed": "Processed",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "approvalRate": "Approval rate",
+    "turnaround": "Avg. turnaround",
+    "share": "Share",
+    "amount": "Amount",
+    "transactions": "Transactions",
+    "dailyCapacity": "Daily capacity",
+    "perDay": "Per day",
+    "capacityUse": "Capacity use",
+    "reached": "Reached",
+    "completed": "Completed",
+    "completion": "Completion",
+    "count": "Count"
+  },
+  "table": {
+    "sortAscending": "Sort {column} ascending",
+    "sortDescending": "Sort {column} descending",
+    "page": "Page {page} of {pages}",
+    "previous": "Previous page",
+    "next": "Next page",
+    "rows": "{count} rows"
+  },
+  "comingSoon": {
+    "title": "{area} is coming soon",
+    "body": "Reporting for this area is planned for a later phase. Executive Summary and VAS are available now.",
+    "back": "Go to Executive Summary"
+  },
+  "unauthorized": {
+    "title": "You do not have access to this dashboard",
+    "body": "You are signed in, but your account has not been given access. Ask the dashboard owner to assign you the viewer role.",
+    "signOut": "Sign out"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you asked for does not exist.",
+    "back": "Go to Executive Summary"
+  },
+  "configError": {
+    "title": "The dashboard is not configured",
+    "body": "A required setting is missing or invalid: {setting}. The application was stopped rather than guessing a value."
+  },
+  "signIn": {
+    "starting": "Signing you in",
+    "failedTitle": "Sign-in could not be started",
+    "failedBody": "The dashboard could not load its sign-in settings. Try again in a moment."
+  }
+}

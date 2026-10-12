@@ -69,6 +69,11 @@ public sealed class ReportContextService(
             ? DateOnly.FromDateTime(clock.UtcNow).AddDays(1)
             : DateOnly.FromDateTime(lastRefreshedAtUtc.Value);
 
+        if (filter.LastDays is { } lastDays)
+        {
+            return new DateRange(defaultEnd.AddDays(-lastDays), defaultEnd);
+        }
+
         var toExclusive = filter.ToExclusive ?? (filter.From is null ? defaultEnd : filter.From.Value.AddDays(DateRange.DefaultDays));
         var from = filter.From ?? toExclusive.AddDays(-DateRange.DefaultDays);
 

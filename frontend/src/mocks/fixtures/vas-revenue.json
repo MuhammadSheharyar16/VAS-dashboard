@@ -1,0 +1,507 @@
+{
+  "meta": {
+    "generatedAtUtc": "2026-10-12T02:00:00Z",
+    "dataSource": "Mock",
+    "freshness": {
+      "lastRefreshedAtUtc": "2026-10-12T02:00:00Z"
+    },
+    "filter": {
+      "from": "2026-09-12",
+      "toExclusive": "2026-10-12",
+      "countryCode": null,
+      "centreCode": null,
+      "visaTypeCode": null,
+      "compare": "PreviousPeriod",
+      "previousFrom": "2026-08-13",
+      "previousToExclusive": "2026-09-12"
+    },
+    "thresholdsArePlaceholders": true
+  },
+  "kpis": [
+    {
+      "key": "vasRevenue",
+      "value": 571700,
+      "unit": "Currency",
+      "currency": "AED",
+      "previousValue": 660885,
+      "changePercent": -13.5,
+      "trend": "Down",
+      "status": "Neutral"
+    },
+    {
+      "key": "revenueTransactions",
+      "value": 1632,
+      "unit": "Count",
+      "currency": null,
+      "previousValue": 1920,
+      "changePercent": -15.0,
+      "trend": "Down",
+      "status": "Neutral"
+    }
+  ],
+  "trend": {
+    "granularity": "Day",
+    "points": [
+      {
+        "periodStart": "2026-09-12",
+        "currency": "AED",
+        "amount": 12735,
+        "transactions": 33
+      },
+      {
+        "periodStart": "2026-09-13",
+        "currency": "AED",
+        "amount": 16175,
+        "transactions": 39
+      },
+      {
+        "periodStart": "2026-09-14",
+        "currency": "AED",
+        "amount": 22390,
+        "transactions": 69
+      },
+      {
+        "periodStart": "2026-09-15",
+        "currency": "AED",
+        "amount": 22840,
+        "transactions": 64
+      },
+      {
+        "periodStart": "2026-09-16",
+        "currency": "AED",
+        "amount": 23390,
+        "transactions": 65
+      },
+      {
+        "periodStart": "2026-09-17",
+        "currency": "AED",
+        "amount": 24135,
+        "transactions": 67
+      },
+      {
+        "periodStart": "2026-09-18",
+        "currency": "AED",
+        "amount": 19400,
+        "transactions": 61
+      },
+      {
+        "periodStart": "2026-09-19",
+        "currency": "AED",
+        "amount": 12845,
+        "transactions": 35
+      },
+      {
+        "periodStart": "2026-09-20",
+        "currency": "AED",
+        "amount": 13790,
+        "transactions": 38
+      },
+      {
+        "periodStart": "2026-09-21",
+        "currency": "AED",
+        "amount": 20325,
+        "transactions": 67
+      },
+      {
+        "periodStart": "2026-09-22",
+        "currency": "AED",
+        "amount": 23625,
+        "transactions": 64
+      },
+      {
+        "periodStart": "2026-09-23",
+        "currency": "AED",
+        "amount": 28245,
+        "transactions": 81
+      },
+      {
+        "periodStart": "2026-09-24",
+        "currency": "AED",
+        "amount": 24145,
+        "transactions": 67
+      },
+      {
+        "periodStart": "2026-09-25",
+        "currency": "AED",
+        "amount": 23340,
+        "transactions": 72
+      },
+      {
+        "periodStart": "2026-09-26",
+        "currency": "AED",
+        "amount": 9735,
+        "transactions": 30
+      },
+      {
+        "periodStart": "2026-09-27",
+        "currency": "AED",
+        "amount": 0,
+        "transactions": 0
+      },
+      {
+        "periodStart": "2026-09-28",
+        "currency": "AED",
+        "amount": 25485,
+        "transactions": 72
+      },
+      {
+        "periodStart": "2026-09-29",
+        "currency": "AED",
+        "amount": 19585,
+        "transactions": 65
+      },
+      {
+        "periodStart": "2026-09-30",
+        "currency": "AED",
+        "amount": 26825,
+        "transactions": 66
+      },
+      {
+        "periodStart": "2026-10-01",
+        "currency": "AED",
+        "amount": 21005,
+        "transactions": 58
+      },
+      {
+        "periodStart": "2026-10-02",
+        "currency": "AED",
+        "amount": 20345,
+        "transactions": 60
+      },
+      {
+        "periodStart": "2026-10-03",
+        "currency": "AED",
+        "amount": 10145,
+        "transactions": 27
+      },
+      {
+        "periodStart": "2026-10-04",
+        "currency": "AED",
+        "amount": 12650,
+        "transactions": 34
+      },
+      {
+        "periodStart": "2026-10-05",
+        "currency": "AED",
+        "amount": 23580,
+        "transactions": 66
+      },
+      {
+        "periodStart": "2026-10-06",
+        "currency": "AED",
+        "amount": 24145,
+        "transactions": 57
+      },
+      {
+        "periodStart": "2026-10-07",
+        "currency": "AED",
+        "amount": 22430,
+        "transactions": 75
+      },
+      {
+        "periodStart": "2026-10-08",
+        "currency": "AED",
+        "amount": 21630,
+        "transactions": 56
+      },
+      {
+        "periodStart": "2026-10-09",
+        "currency": "AED",
+        "amount": 22755,
+        "transactions": 72
+      },
+      {
+        "periodStart": "2026-10-10",
+        "currency": "AED",
+        "amount": 11135,
+        "transactions": 29
+      },
+      {
+        "periodStart": "2026-10-11",
+        "currency": "AED",
+        "amount": 12870,
+        "transactions": 43
+      }
+    ]
+  },
+  "byCountry": [
+    {
+      "key": "AE",
+      "name": "United Arab Emirates",
+      "currency": "AED",
+      "amount": 168290,
+      "transactions": 471,
+      "sharePercent": 29.4
+    },
+    {
+      "key": "IN",
+      "name": "India",
+      "currency": "AED",
+      "amount": 118340,
+      "transactions": 351,
+      "sharePercent": 20.7
+    },
+    {
+      "key": "SA",
+      "name": "Saudi Arabia",
+      "currency": "AED",
+      "amount": 106540,
+      "transactions": 296,
+      "sharePercent": 18.6
+    },
+    {
+      "key": "PK",
+      "name": "Pakistan",
+      "currency": "AED",
+      "amount": 69210,
+      "transactions": 212,
+      "sharePercent": 12.1
+    },
+    {
+      "key": "GB",
+      "name": "United Kingdom",
+      "currency": "AED",
+      "amount": 61030,
+      "transactions": 168,
+      "sharePercent": 10.7
+    },
+    {
+      "key": "EG",
+      "name": "Egypt",
+      "currency": "AED",
+      "amount": 48290,
+      "transactions": 134,
+      "sharePercent": 8.4
+    }
+  ],
+  "byCentre": [
+    {
+      "key": "AE-DXB",
+      "name": "Dubai Centre",
+      "currency": "AED",
+      "amount": 89690,
+      "transactions": 249,
+      "sharePercent": 15.7
+    },
+    {
+      "key": "SA-RUH",
+      "name": "Riyadh Centre",
+      "currency": "AED",
+      "amount": 51085,
+      "transactions": 152,
+      "sharePercent": 8.9
+    },
+    {
+      "key": "AE-AUH",
+      "name": "Abu Dhabi Centre",
+      "currency": "AED",
+      "amount": 50905,
+      "transactions": 140,
+      "sharePercent": 8.9
+    },
+    {
+      "key": "PK-KHI",
+      "name": "Karachi Centre",
+      "currency": "AED",
+      "amount": 47885,
+      "transactions": 149,
+      "sharePercent": 8.4
+    },
+    {
+      "key": "IN-DEL",
+      "name": "New Delhi Centre",
+      "currency": "AED",
+      "amount": 46185,
+      "transactions": 140,
+      "sharePercent": 8.1
+    },
+    {
+      "key": "IN-BOM",
+      "name": "Mumbai Centre",
+      "currency": "AED",
+      "amount": 44760,
+      "transactions": 122,
+      "sharePercent": 7.8
+    },
+    {
+      "key": "GB-LON",
+      "name": "London Centre",
+      "currency": "AED",
+      "amount": 38200,
+      "transactions": 104,
+      "sharePercent": 6.7
+    },
+    {
+      "key": "EG-CAI",
+      "name": "Cairo Centre",
+      "currency": "AED",
+      "amount": 34255,
+      "transactions": 93,
+      "sharePercent": 6.0
+    },
+    {
+      "key": "SA-JED",
+      "name": "Jeddah Centre",
+      "currency": "AED",
+      "amount": 32120,
+      "transactions": 87,
+      "sharePercent": 5.6
+    },
+    {
+      "key": "AE-SHJ",
+      "name": "Sharjah Centre",
+      "currency": "AED",
+      "amount": 27695,
+      "transactions": 82,
+      "sharePercent": 4.8
+    },
+    {
+      "key": "IN-BLR",
+      "name": "Bengaluru Centre",
+      "currency": "AED",
+      "amount": 27395,
+      "transactions": 89,
+      "sharePercent": 4.8
+    },
+    {
+      "key": "SA-DMM",
+      "name": "Dammam Centre",
+      "currency": "AED",
+      "amount": 23335,
+      "transactions": 57,
+      "sharePercent": 4.1
+    },
+    {
+      "key": "GB-MAN",
+      "name": "Manchester Centre",
+      "currency": "AED",
+      "amount": 22830,
+      "transactions": 64,
+      "sharePercent": 4.0
+    },
+    {
+      "key": "PK-LHE",
+      "name": "Lahore Centre",
+      "currency": "AED",
+      "amount": 21325,
+      "transactions": 63,
+      "sharePercent": 3.7
+    },
+    {
+      "key": "EG-ALX",
+      "name": "Alexandria Centre",
+      "currency": "AED",
+      "amount": 14035,
+      "transactions": 41,
+      "sharePercent": 2.5
+    }
+  ],
+  "byVisaType": [
+    {
+      "key": "TOUR",
+      "name": "Tourist",
+      "currency": "AED",
+      "amount": 141980,
+      "transactions": 507,
+      "sharePercent": 24.8
+    },
+    {
+      "key": "WORK",
+      "name": "Employment",
+      "currency": "AED",
+      "amount": 105955,
+      "transactions": 189,
+      "sharePercent": 18.5
+    },
+    {
+      "key": "BUS",
+      "name": "Business",
+      "currency": "AED",
+      "amount": 93920,
+      "transactions": 260,
+      "sharePercent": 16.4
+    },
+    {
+      "key": "RES",
+      "name": "Residence",
+      "currency": "AED",
+      "amount": 65905,
+      "transactions": 96,
+      "sharePercent": 11.5
+    },
+    {
+      "key": "FAM",
+      "name": "Family Visit",
+      "currency": "AED",
+      "amount": 64995,
+      "transactions": 261,
+      "sharePercent": 11.4
+    },
+    {
+      "key": "STU",
+      "name": "Student",
+      "currency": "AED",
+      "amount": 57500,
+      "transactions": 119,
+      "sharePercent": 10.1
+    },
+    {
+      "key": "MED",
+      "name": "Medical",
+      "currency": "AED",
+      "amount": 25210,
+      "transactions": 82,
+      "sharePercent": 4.4
+    },
+    {
+      "key": "TRAN",
+      "name": "Transit",
+      "currency": "AED",
+      "amount": 16235,
+      "transactions": 118,
+      "sharePercent": 2.8
+    }
+  ],
+  "byService": [
+    {
+      "key": "Service Fee",
+      "name": "Service Fee",
+      "currency": "AED",
+      "amount": 520200,
+      "transactions": 1171,
+      "sharePercent": 91.0
+    },
+    {
+      "key": "Premium Lounge",
+      "name": "Premium Lounge",
+      "currency": "AED",
+      "amount": 35250,
+      "transactions": 141,
+      "sharePercent": 6.2
+    },
+    {
+      "key": "Courier Return",
+      "name": "Courier Return",
+      "currency": "AED",
+      "amount": 10500,
+      "transactions": 175,
+      "sharePercent": 1.8
+    },
+    {
+      "key": "Form Filling Assistance",
+      "name": "Form Filling Assistance",
+      "currency": "AED",
+      "amount": 4400,
+      "transactions": 55,
+      "sharePercent": 0.8
+    },
+    {
+      "key": "SMS Updates",
+      "name": "SMS Updates",
+      "currency": "AED",
+      "amount": 1350,
+      "transactions": 90,
+      "sharePercent": 0.2
+    }
+  ]
+}

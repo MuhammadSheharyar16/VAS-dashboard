@@ -21,6 +21,12 @@ public abstract class ReportFilterValidator<T> : AbstractValidator<T>
         RuleFor(filter => filter.VisaTypeCode).MaximumLength(MaxCodeLength).Matches(CodePattern).WithMessage(CodeMessage);
         RuleFor(filter => filter.Compare).IsInEnum();
 
+        RuleFor(filter => filter.LastDays)
+            .InclusiveBetween(1, DateRange.MaxPresetDays)
+            .Must((filter, _) => filter.From is null && filter.ToExclusive is null)
+            .WithMessage("Send either lastDays or a from/toExclusive range, not both.")
+            .When(filter => filter.LastDays.HasValue);
+
         RuleFor(filter => filter.From)
             .Custom((_, context) =>
             {

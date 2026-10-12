@@ -1,0 +1,493 @@
+{
+  "meta": {
+    "generatedAtUtc": "2026-10-12T02:00:00Z",
+    "dataSource": "Mock",
+    "freshness": {
+      "lastRefreshedAtUtc": "2026-10-12T02:00:00Z"
+    },
+    "filter": {
+      "from": "2026-09-12",
+      "toExclusive": "2026-10-12",
+      "countryCode": null,
+      "centreCode": null,
+      "visaTypeCode": null,
+      "compare": "PreviousPeriod",
+      "previousFrom": "2026-08-13",
+      "previousToExclusive": "2026-09-12"
+    },
+    "thresholdsArePlaceholders": true
+  },
+  "kpis": [
+    {
+      "key": "applicationsApproved",
+      "value": 650,
+      "unit": "Count",
+      "currency": null,
+      "previousValue": 1033,
+      "changePercent": -37.1,
+      "trend": "Down",
+      "status": "Neutral"
+    },
+    {
+      "key": "applicationsRejected",
+      "value": 131,
+      "unit": "Count",
+      "currency": null,
+      "previousValue": 238,
+      "changePercent": -45.0,
+      "trend": "Down",
+      "status": "Neutral"
+    },
+    {
+      "key": "applicationsWithdrawn",
+      "value": 37,
+      "unit": "Count",
+      "currency": null,
+      "previousValue": 36,
+      "changePercent": 2.8,
+      "trend": "Up",
+      "status": "Neutral"
+    },
+    {
+      "key": "approvalRate",
+      "value": 83.2,
+      "unit": "Percent",
+      "currency": null,
+      "previousValue": 81.3,
+      "changePercent": 2.3,
+      "trend": "Up",
+      "status": "Good"
+    },
+    {
+      "key": "rejectionRate",
+      "value": 16.8,
+      "unit": "Percent",
+      "currency": null,
+      "previousValue": 18.7,
+      "changePercent": -10.2,
+      "trend": "Down",
+      "status": "Neutral"
+    }
+  ],
+  "trend": {
+    "granularity": "Day",
+    "points": [
+      {
+        "periodStart": "2026-09-12",
+        "approved": 16,
+        "rejected": 6,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-09-13",
+        "approved": 25,
+        "rejected": 2,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-09-14",
+        "approved": 34,
+        "rejected": 7,
+        "withdrawn": 3
+      },
+      {
+        "periodStart": "2026-09-15",
+        "approved": 33,
+        "rejected": 7,
+        "withdrawn": 4
+      },
+      {
+        "periodStart": "2026-09-16",
+        "approved": 41,
+        "rejected": 7,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-09-17",
+        "approved": 36,
+        "rejected": 9,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-09-18",
+        "approved": 19,
+        "rejected": 10,
+        "withdrawn": 6
+      },
+      {
+        "periodStart": "2026-09-19",
+        "approved": 14,
+        "rejected": 5,
+        "withdrawn": 3
+      },
+      {
+        "periodStart": "2026-09-20",
+        "approved": 20,
+        "rejected": 5,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-09-21",
+        "approved": 33,
+        "rejected": 3,
+        "withdrawn": 2
+      },
+      {
+        "periodStart": "2026-09-22",
+        "approved": 27,
+        "rejected": 11,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-09-23",
+        "approved": 35,
+        "rejected": 7,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-09-24",
+        "approved": 31,
+        "rejected": 3,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-09-25",
+        "approved": 42,
+        "rejected": 7,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-09-26",
+        "approved": 17,
+        "rejected": 1,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-09-27",
+        "approved": 0,
+        "rejected": 0,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-09-28",
+        "approved": 29,
+        "rejected": 5,
+        "withdrawn": 3
+      },
+      {
+        "periodStart": "2026-09-29",
+        "approved": 26,
+        "rejected": 9,
+        "withdrawn": 2
+      },
+      {
+        "periodStart": "2026-09-30",
+        "approved": 29,
+        "rejected": 3,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-10-01",
+        "approved": 34,
+        "rejected": 5,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-10-02",
+        "approved": 23,
+        "rejected": 8,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-10-03",
+        "approved": 13,
+        "rejected": 3,
+        "withdrawn": 2
+      },
+      {
+        "periodStart": "2026-10-04",
+        "approved": 14,
+        "rejected": 0,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-10-05",
+        "approved": 25,
+        "rejected": 2,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-10-06",
+        "approved": 18,
+        "rejected": 1,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-10-07",
+        "approved": 9,
+        "rejected": 3,
+        "withdrawn": 1
+      },
+      {
+        "periodStart": "2026-10-08",
+        "approved": 6,
+        "rejected": 1,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-10-09",
+        "approved": 1,
+        "rejected": 0,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-10-10",
+        "approved": 0,
+        "rejected": 1,
+        "withdrawn": 0
+      },
+      {
+        "periodStart": "2026-10-11",
+        "approved": 0,
+        "rejected": 0,
+        "withdrawn": 0
+      }
+    ]
+  },
+  "outcomes": [
+    {
+      "outcome": "Approved",
+      "count": 650,
+      "sharePercent": 55.5
+    },
+    {
+      "outcome": "Rejected",
+      "count": 131,
+      "sharePercent": 11.2
+    },
+    {
+      "outcome": "Withdrawn",
+      "count": 37,
+      "sharePercent": 3.2
+    },
+    {
+      "outcome": "Pending",
+      "count": 353,
+      "sharePercent": 30.1
+    }
+  ],
+  "byVisaType": [
+    {
+      "key": "TOUR",
+      "name": "Tourist",
+      "group": "Short stay",
+      "received": 357,
+      "processed": 296,
+      "pending": 61,
+      "approved": 243,
+      "rejected": 43,
+      "withdrawn": 10,
+      "approvalRate": 85.0,
+      "rejectionRate": 15.0,
+      "averageTurnaroundDays": 4.8,
+      "sharePercent": 30.5
+    },
+    {
+      "key": "BUS",
+      "name": "Business",
+      "group": "Short stay",
+      "received": 192,
+      "processed": 157,
+      "pending": 35,
+      "approved": 125,
+      "rejected": 23,
+      "withdrawn": 9,
+      "approvalRate": 84.5,
+      "rejectionRate": 15.5,
+      "averageTurnaroundDays": 5.7,
+      "sharePercent": 16.4
+    },
+    {
+      "key": "FAM",
+      "name": "Family Visit",
+      "group": "Short stay",
+      "received": 186,
+      "processed": 127,
+      "pending": 59,
+      "approved": 99,
+      "rejected": 23,
+      "withdrawn": 5,
+      "approvalRate": 81.1,
+      "rejectionRate": 18.9,
+      "averageTurnaroundDays": 7.7,
+      "sharePercent": 15.9
+    },
+    {
+      "key": "WORK",
+      "name": "Employment",
+      "group": "Long stay",
+      "received": 134,
+      "processed": 54,
+      "pending": 80,
+      "approved": 37,
+      "rejected": 14,
+      "withdrawn": 3,
+      "approvalRate": 72.5,
+      "rejectionRate": 27.5,
+      "averageTurnaroundDays": 16.9,
+      "sharePercent": 11.4
+    },
+    {
+      "key": "STU",
+      "name": "Student",
+      "group": "Long stay",
+      "received": 90,
+      "processed": 42,
+      "pending": 48,
+      "approved": 31,
+      "rejected": 11,
+      "withdrawn": 0,
+      "approvalRate": 73.8,
+      "rejectionRate": 26.2,
+      "averageTurnaroundDays": 13,
+      "sharePercent": 7.7
+    },
+    {
+      "key": "TRAN",
+      "name": "Transit",
+      "group": "Short stay",
+      "received": 85,
+      "processed": 81,
+      "pending": 4,
+      "approved": 72,
+      "rejected": 4,
+      "withdrawn": 5,
+      "approvalRate": 94.7,
+      "rejectionRate": 5.3,
+      "averageTurnaroundDays": 1.9,
+      "sharePercent": 7.3
+    },
+    {
+      "key": "RES",
+      "name": "Residence",
+      "group": "Long stay",
+      "received": 70,
+      "processed": 10,
+      "pending": 60,
+      "approved": 6,
+      "rejected": 3,
+      "withdrawn": 1,
+      "approvalRate": 66.7,
+      "rejectionRate": 33.3,
+      "averageTurnaroundDays": 17.1,
+      "sharePercent": 6.0
+    },
+    {
+      "key": "MED",
+      "name": "Medical",
+      "group": "Short stay",
+      "received": 57,
+      "processed": 51,
+      "pending": 6,
+      "approved": 37,
+      "rejected": 10,
+      "withdrawn": 4,
+      "approvalRate": 78.7,
+      "rejectionRate": 21.3,
+      "averageTurnaroundDays": 4.0,
+      "sharePercent": 4.9
+    }
+  ],
+  "byCountry": [
+    {
+      "key": "AE",
+      "name": "United Arab Emirates",
+      "group": "Middle East",
+      "received": 344,
+      "processed": 229,
+      "pending": 115,
+      "approved": 186,
+      "rejected": 30,
+      "withdrawn": 13,
+      "approvalRate": 86.1,
+      "rejectionRate": 13.9,
+      "averageTurnaroundDays": 6.7,
+      "sharePercent": 29.4
+    },
+    {
+      "key": "IN",
+      "name": "India",
+      "group": "South Asia",
+      "received": 247,
+      "processed": 178,
+      "pending": 69,
+      "approved": 143,
+      "rejected": 28,
+      "withdrawn": 7,
+      "approvalRate": 83.6,
+      "rejectionRate": 16.4,
+      "averageTurnaroundDays": 6.2,
+      "sharePercent": 21.1
+    },
+    {
+      "key": "SA",
+      "name": "Saudi Arabia",
+      "group": "Middle East",
+      "received": 218,
+      "processed": 158,
+      "pending": 60,
+      "approved": 115,
+      "rejected": 39,
+      "withdrawn": 4,
+      "approvalRate": 74.7,
+      "rejectionRate": 25.3,
+      "averageTurnaroundDays": 6.4,
+      "sharePercent": 18.6
+    },
+    {
+      "key": "PK",
+      "name": "Pakistan",
+      "group": "South Asia",
+      "received": 142,
+      "processed": 101,
+      "pending": 41,
+      "approved": 82,
+      "rejected": 16,
+      "withdrawn": 3,
+      "approvalRate": 83.7,
+      "rejectionRate": 16.3,
+      "averageTurnaroundDays": 6.0,
+      "sharePercent": 12.1
+    },
+    {
+      "key": "GB",
+      "name": "United Kingdom",
+      "group": "Europe",
+      "received": 124,
+      "processed": 89,
+      "pending": 35,
+      "approved": 69,
+      "rejected": 13,
+      "withdrawn": 7,
+      "approvalRate": 84.1,
+      "rejectionRate": 15.9,
+      "averageTurnaroundDays": 7.1,
+      "sharePercent": 10.6
+    },
+    {
+      "key": "EG",
+      "name": "Egypt",
+      "group": "Africa",
+      "received": 96,
+      "processed": 63,
+      "pending": 33,
+      "approved": 55,
+      "rejected": 5,
+      "withdrawn": 3,
+      "approvalRate": 91.7,
+      "rejectionRate": 8.3,
+      "averageTurnaroundDays": 6.4,
+      "sharePercent": 8.2
+    }
+  ]
+}

@@ -3,6 +3,24 @@
 # One image for every environment. No credentials are built in:
 # Entra IDs and other settings arrive as environment variables at run time.
 
+# ---- Build the React app -------------------------------------------------
+FROM node:22-alpine AS web-build
+WORKDIR /web
+
+# Package files first, so the install layer is reused until a dependency changes.
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
+
+COPY frontend/ ./
+
+# The API base path is the same everywhere because the app and the API share one origin.
+# VITE_USE_MOCK stays false for any image that is deployed; docker-compose sets it to true
+# so the dashboard can be seen locally without an Entra tenant.
+ARG VITE_USE_MOCK=false
+ENV VITE_API_BASE_URL=/api/v1 \
+    VITE_USE_MOCK=${VITE_USE_MOCK}
+RUN npm run build
+
 # ---- Build the API -------------------------------------------------------
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS api-build
 WORKDIR /src
@@ -34,8 +52,7 @@ ENV ASPNETCORE_HTTP_PORTS=8080 \
 EXPOSE 8080
 
 COPY --from=api-build /app/publish ./
-
-# The compiled React app is copied into ./wwwroot here once web/ exists.
+COPY --from=web-build /web/dist ./wwwroot
 
 USER $APP_UID
 ENTRYPOINT ["dotnet", "Vas.Api.dll"]

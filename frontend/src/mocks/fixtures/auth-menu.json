@@ -1,0 +1,44 @@
+[
+  {
+    "code": "EXECUTIVE_SUMMARY",
+    "title": "Executive Summary",
+    "route": "/executive-summary",
+    "order": 1,
+    "isComingSoon": false
+  },
+  {
+    "code": "VAS",
+    "title": "VAS",
+    "route": "/vas",
+    "order": 2,
+    "isComingSoon": false
+  },
+  {
+    "code": "OPERATIONS",
+    "title": "Operations",
+    "route": "/operations",
+    "order": 3,
+    "isComingSoon": true
+  },
+  {
+    "code": "FINANCE",
+    "title": "Finance",
+    "route": "/finance",
+    "order": 4,
+    "isComingSoon": true
+  },
+  {
+    "code": "ALFIT",
+    "title": "Alfit",
+    "route": "/alfit",
+    "order": 5,
+    "isComingSoon": true
+  },
+  {
+    "code": "CSAT",
+    "title": "CSAT",
+    "route": "/csat",
+    "order": 6,
+    "isComingSoon": true
+  }
+]

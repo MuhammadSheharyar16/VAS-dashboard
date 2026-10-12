@@ -1,0 +1,66 @@
+/* Layout shared by the report screens. Colours and component styles live elsewhere. */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.report-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  transition: opacity 240ms var(--ease-out);
+}
+
+.report-stack[data-refreshing='true'] {
+  opacity: 0.6;
+}
+
+.grid-2-1 {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--space-5);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.countries {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.section-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+@media (max-width: 1180px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .grid-2-1,
+  .grid-2,
+  .grid-3,
+  .countries {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

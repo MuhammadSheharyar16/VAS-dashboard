@@ -7,7 +7,11 @@
 **/node_modules
 **/dist
 **/TestResults
+**/test-results
+**/playwright-report
 backend/tests
+frontend/tests
 docs
 .env
+**/.env
 *.md

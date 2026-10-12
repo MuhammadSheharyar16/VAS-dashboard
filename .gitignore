@@ -480,3 +480,9 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Frontend
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+

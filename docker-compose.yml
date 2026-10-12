@@ -2,6 +2,10 @@ services:
   dashboard:
     build:
       context: .
+      args:
+        # Local only: the web app shows fixtures and a sample user, so no Entra tenant is needed.
+        # A deployed image is built without this argument and always signs in for real.
+        VITE_USE_MOCK: "true"
     image: vas-dashboard:local
     ports:
       - "8080:8080"

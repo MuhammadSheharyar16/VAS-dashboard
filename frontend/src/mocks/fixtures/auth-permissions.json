@@ -1,0 +1,20 @@
+[
+  {
+    "screen": "DASHBOARD",
+    "actions": [
+      "View"
+    ]
+  },
+  {
+    "screen": "EXECUTIVE_SUMMARY",
+    "actions": [
+      "View"
+    ]
+  },
+  {
+    "screen": "VAS",
+    "actions": [
+      "View"
+    ]
+  }
+]
