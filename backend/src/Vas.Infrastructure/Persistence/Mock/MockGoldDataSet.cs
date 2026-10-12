@@ -37,10 +37,13 @@ public sealed record MockGoldDataSet(
             ?? throw new InvalidOperationException($"Mock data file {fileName} is empty.");
     }
 
+    /// <summary>Opens an embedded mock file as JSON text, decompressing it when it is stored compressed.</summary>
     public static Stream OpenEmbedded(string fileName)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        return assembly.GetManifestResourceStream($"{GoldJson.ResourcePrefix}{fileName}")
+        var stored = assembly.GetManifestResourceStream($"{GoldJson.ResourcePrefix}{fileName}")
             ?? throw new InvalidOperationException($"Mock data file {fileName} is not embedded in {assembly.GetName().Name}.");
+
+        return GoldJson.OpenJson(stored, fileName);
     }
 }

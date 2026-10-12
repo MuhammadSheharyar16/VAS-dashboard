@@ -89,7 +89,7 @@ The Fabric Gold layer is **not available yet**. Development, demos and automated
 
 | Layer | Mock approach | Switch to live |
 | --- | --- | --- |
-| Mock files | Gold-shaped rows as JSON, one file per Gold object (`dim_country.json`, `fact_visa_application.json`, ...), embedded in `backend/src/Vas.Infrastructure/MockData/`. A fixed-seed generator in `backend/mock-data/generator/` writes them | Not used |
+| Mock files | Gold-shaped rows as JSON, one file per Gold object (`dim_country.json`, `fact_visa_application.json.gz`, ...; the three fact files are gzip-compressed), embedded in `backend/src/Vas.Infrastructure/MockData/`. A fixed-seed generator in `backend/mock-data/generator/` writes them | Not used |
 | Backend | `IReportingDbContext` exposes one `IQueryable<T>` per Gold object. Services write their KPI queries once in LINQ. With `DataSource=Mock`, `JsonReportingSource` serves the JSON rows in memory through an async-capable query provider, so the same async LINQ runs on both sources; with `DataSource=Fabric`, the EF Core `ReportingDbContext` serves the same `IQueryable<T>` from the SQL endpoint | Set `DataSource=Fabric` and the Fabric connection; adjust the `ToView`/column mappings in `Infrastructure/Persistence/Configurations/` to the real Gold names |
 | Frontend | `VITE_USE_MOCK=true` uses JSON fixtures in `web/src/mocks/` behind the same repository interface as the live API, for UI work without the backend. In this mode only, the frontend uses a fake signed-in user | `VITE_USE_MOCK=false` |
 | Tests | Unit and application tests run every service against the JSON source | Add SQL translation tests against the real endpoint once Fabric is available |
@@ -310,5 +310,8 @@ Closed on 12 Oct 2026: 7 (no Figma; own designs), 8 (English only), 9 (Recharts)
 | C | `DataSource=Mock` is accepted only when the environment is `Development`. A deployed Dev App Service that should demo on mock data must set `ASPNETCORE_ENVIRONMENT=Development` | An allow-list is safer than naming the environments to refuse |
 | D | The Executive Summary KPI set and definitions in `docs/kpi-mapping.md` are provisional | No KPI Mapping document yet |
 | E | Unknown `/api` routes return 401 to callers without a token, and 404 only to signed-in callers | Anonymous callers cannot probe which routes exist |
-| F | The mock JSON files are about 24 MB in the repository | 20,742 applications with about 100,000 stage rows, as section 3.1 specifies |
+| F | The three large mock fact files are stored gzip-compressed (`fact_*.json.gz`); the dimension files and the refresh log stay plain JSON. The folder is 0.9 MB instead of 24 MB | Section 3.1 still holds: one JSON file per Gold object, embedded in the API. Only the storage of three of them changed |
+| G | The six VAS reports use provisional definitions too (`docs/kpi-mapping.md`). Time spent per stage is not reported | No KPI Mapping yet; a stage duration needs a Gold column, because date arithmetic cannot run from one query on both sources |
+| H | The centres table is aggregated per centre in the database, then sorted and paged in the API | Capacity use is calculated from the aggregate and the centre dimension; the row count is the number of centres |
+| I | Every `/api/v1/vas/...` report needs the `VAS` screen permission; the lookups and `/auth/me` need the `DASHBOARD` permission. The Viewer role has both | One role today, but the screens stay separable |
 | – | The Implementation Guide ranks below this file |

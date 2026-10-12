@@ -64,6 +64,13 @@ public static class DependencyInjection
                 "Each KPI threshold needs Warning and Critical on the correct sides of each other.")
             .ValidateOnStart();
 
+        services.AddOptions<PaginationOptions>()
+            .Bind(configuration.GetSection(PaginationOptions.SectionName))
+            .ValidateDataAnnotations()
+            .Validate(options => options.DefaultPageSize <= options.MaxPageSize,
+                "Pagination:DefaultPageSize cannot be larger than Pagination:MaxPageSize.")
+            .ValidateOnStart();
+
         // Mock source: the embedded JSON files.
         services.AddSingleton(_ => new JsonReportingSource(MockGoldDataSet.FromEmbeddedFiles()));
 

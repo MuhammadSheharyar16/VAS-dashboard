@@ -35,6 +35,12 @@ public enum TrendDirection
     Down,
 }
 
+public enum SortDirection
+{
+    Ascending,
+    Descending,
+}
+
 public enum TrendGranularity
 {
     Day,

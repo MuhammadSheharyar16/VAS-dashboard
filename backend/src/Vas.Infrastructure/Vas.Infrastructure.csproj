@@ -3,7 +3,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MockData\*.json" />
+    <EmbeddedResource Include="MockData\*.json;MockData\*.json.gz" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vas.Application\Vas.Application.csproj" />

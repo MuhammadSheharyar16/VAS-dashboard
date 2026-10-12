@@ -15,10 +15,11 @@ Directory.CreateDirectory(outputDirectory);
 
 var data = MockGoldGenerator.Generate();
 
-foreach (var (fileName, content) in GoldJson.SerializeAll(data))
+foreach (var (fileName, json) in GoldJson.SerializeAll(data))
 {
-    File.WriteAllText(Path.Combine(outputDirectory, fileName), content);
-    Console.WriteLine($"{fileName,-32} {content.Length / 1024.0,10:N0} KB");
+    var path = Path.Combine(outputDirectory, fileName);
+    GoldJson.WriteFile(path, json);
+    Console.WriteLine($"{fileName,-36} {new FileInfo(path).Length / 1024.0,10:N0} KB on disk");
 }
 
 Console.WriteLine(

@@ -12,7 +12,8 @@ A React dashboard and an ASP.NET Core reporting API, shipped as one container on
 | Entra ID token validation and permissions | Done against test tokens; real sign-in waits for the tenant ([docs/entra-setup.md](docs/entra-setup.md)) |
 | Mock data layer | Done: Gold-shaped JSON files, served through the same queries Fabric will run |
 | Executive Summary endpoint | Done on mock data, with provisional KPI definitions ([docs/kpi-mapping.md](docs/kpi-mapping.md)) |
-| VAS report endpoints | Not started |
+| VAS report endpoints and lookups | Done on mock data: applications, outcomes, processing, revenue, visa types, centres |
+| Container image | Builds and runs; `/healthz` verified inside it |
 | React frontend (`web/`) | Not started |
 | Fabric connection | Waits for the Gold layer |
 
@@ -60,10 +61,14 @@ It listens on `http://localhost:5080`.
 | `/openapi/v1.json` | The API description (Development only) |
 | `/api/v1/auth/me` | 401 until you send a valid Entra token |
 | `/api/v1/executive-summary` | The Executive Summary report; same token needed |
+| `/api/v1/vas/applications`, `/outcomes`, `/processing`, `/revenue`, `/visa-types`, `/centres` | The six VAS reports |
+| `/api/v1/lookups/countries`, `/centres`, `/visa-types` | The choices for the filter dropdowns |
+
+Every report accepts `from`, `toExclusive` (dates as `yyyy-MM-dd`), `countryCode`, `centreCode`, `visaTypeCode` and `compare` (`PreviousPeriod` or `None`). The centres report also accepts `page`, `pageSize`, `sortBy` and `sortDirection`.
 
 ## Mock data
 
-Until the Fabric Gold layer exists, the API reads Gold-shaped JSON files embedded from `backend/src/Vas.Infrastructure/MockData/` (about 24 MB: 20,742 applications over 18 months, 6 countries, 15 centres, 8 visa types). The data is synthetic.
+Until the Fabric Gold layer exists, the API reads Gold-shaped JSON files embedded from `backend/src/Vas.Infrastructure/MockData/`: 20,742 applications over 18 months, 6 countries, 15 centres, 8 visa types. The data is synthetic. The three large fact files are gzip-compressed (`.json.gz`), which keeps the folder under 1 MB; inside they are plain JSON, one row per line.
 
 The files are generated, so do not edit them by hand. To change the data, change the generator and run:
 

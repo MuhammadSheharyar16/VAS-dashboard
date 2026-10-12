@@ -54,6 +54,32 @@ Each KPI also carries the previous period's value, the percentage change and a s
 | Outcomes | Approved, Rejected, Withdrawn and Pending, each as a count and a share of received |
 | Top countries | The five countries with the most applications received, with their share of the total |
 
+## VAS reports
+
+All six take the same filters as the Executive Summary. Every breakdown row carries received, processed, pending, approved, rejected, withdrawn, approval rate, rejection rate, average turnaround and its share of received.
+
+| Report | Endpoint | Content | Source |
+| --- | --- | --- | --- |
+| Applications and volumes | `GET /api/v1/vas/applications` | Received, processed and pending against the previous period; trend; breakdowns by country, visa type and channel | `fact_visa_application` |
+| Outcomes | `GET /api/v1/vas/outcomes` | Approved, rejected and withdrawn counts; approval rate; rejection rate (Rejected ÷ (Approved + Rejected)); trend per outcome; breakdowns by visa type and country | `fact_visa_application.outcome` |
+| Processing and journey | `GET /api/v1/vas/processing` | Average turnaround overall, for the digital channel and for the centre channel; digital share of received; counts by `status`; pending applications by `current_stage`; stage funnel; breakdowns by channel and visa type | `fact_visa_application`, `fact_application_stage` |
+| Revenue | `GET /api/v1/vas/revenue` | Revenue per currency and transaction count against the previous period; trend; breakdowns by country, centre, visa type and `service_name`. Shares are within one currency | `fact_vas_revenue` |
+| Visa types | `GET /api/v1/vas/visa-types` | One row per visa type in scope, including types with no applications | `fact_visa_application`, `dim_visa_type` |
+| Centre performance | `GET /api/v1/vas/centres` | One row per centre, paged and sortable: volumes, approval rate, turnaround, applications per day and capacity use | `fact_visa_application`, `dim_centre` |
+
+Definitions specific to these reports:
+
+| Figure | Definition |
+| --- | --- |
+| Stage funnel | For the applications in scope, the number of `fact_application_stage` rows per stage ("reached") and how many of those have an `exited_at_utc` ("completed") |
+| Applications per day | Received ÷ number of days in the range, to one decimal |
+| Capacity use | Received ÷ (days in the range × `daily_capacity`), as a percentage with one decimal. Every calendar day counts, including days the centre is closed |
+| Channel | `fact_visa_application.channel`: `Digital` or `Centre` |
+
+**Not reported: time spent in each stage.** It needs a duration, and subtracting two timestamps is not something one query can do on both the mock source and the SQL endpoint. If AEGI wants it, the Gold layer should provide a duration column or a view.
+
+The lookups for the filter dropdowns are `GET /api/v1/lookups/countries`, `/centres` (optionally `?countryCode=`) and `/visa-types`, read from the three dimension objects, sorted by name and capped at 500 rows.
+
 ## Status thresholds
 
 Thresholds are in API configuration (`KpiThresholds`), not in code and not in React. The current values are **placeholders**; every response says so through `meta.thresholdsArePlaceholders`.
@@ -62,6 +88,7 @@ Thresholds are in API configuration (`KpiThresholds`), not in code and not in Re
 | --- | --- | --- | --- |
 | `approvalRate` | 75% or lower | 60% or lower | Higher |
 | `averageTurnaroundDays` | 10 days or more | 15 days or more | Lower |
+| `capacityUtilisation` (per centre) | 85% or more | 100% or more | Lower |
 
 A KPI without a threshold has the status `Neutral`.
 
@@ -73,3 +100,6 @@ A KPI without a threshold has the status `Neutral`.
 4. Is `turnaround_days` already calculated in Gold, and in calendar or working days?
 5. Is revenue ever in more than one currency, and if so is a reporting currency expected?
 6. Does `refresh_log` (or an equivalent) exist, and what marks a successful refresh?
+7. Is time spent per stage wanted? If so, can Gold provide a stage duration?
+8. Should capacity use count only the days a centre is open, and is `daily_capacity` the right measure of capacity?
+9. Do digital applications have a centre at all, or should `centre_code` be empty for them?

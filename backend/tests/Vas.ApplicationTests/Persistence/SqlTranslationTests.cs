@@ -2,7 +2,21 @@ using System.Data;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Vas.Application.Features.Centres.DTOs;
+using Vas.Application.Features.Centres.Services;
 using Vas.Application.Features.ExecutiveSummary.DTOs;
+using Vas.Application.Features.Lookups.DTOs;
+using Vas.Application.Features.Lookups.Services;
+using Vas.Application.Features.VasApplications.DTOs;
+using Vas.Application.Features.VasApplications.Services;
+using Vas.Application.Features.VasOutcomes.DTOs;
+using Vas.Application.Features.VasOutcomes.Services;
+using Vas.Application.Features.VasProcessing.DTOs;
+using Vas.Application.Features.VasProcessing.Services;
+using Vas.Application.Features.VasRevenue.DTOs;
+using Vas.Application.Features.VasRevenue.Services;
+using Vas.Application.Features.VisaTypes.DTOs;
+using Vas.Application.Features.VisaTypes.Services;
 using Vas.ApplicationTests.Support;
 using Vas.Infrastructure.Persistence;
 
@@ -95,6 +109,80 @@ public class SqlTranslationTests
         Assert.Contains(captured.Sql, sql => sql.Contains("[gold].[fact_visa_application]") && sql.Contains("COUNT("));
         Assert.Contains(captured.Sql, sql => sql.Contains("[gold].[fact_vas_revenue]") && sql.Contains("SUM("));
         Assert.Contains(captured.Sql, sql => sql.Contains("[gold].[refresh_log]"));
+    }
+
+    private static readonly DateOnly From = new(2026, 1, 1);
+    private static readonly DateOnly ToExclusive = new(2026, 10, 1);
+
+    public static TheoryData<string, Func<ReportingDbContext, Task>> VasReports => new()
+    {
+        {
+            "applications", db => ReportingTestHost.Service<IVasApplicationsService>(db)
+                .GetAsync(new VasApplicationsQueryParams { From = From, ToExclusive = ToExclusive }, CancellationToken.None)
+        },
+        {
+            "outcomes", db => ReportingTestHost.Service<IVasOutcomesService>(db)
+                .GetAsync(new VasOutcomesQueryParams { From = From, ToExclusive = ToExclusive }, CancellationToken.None)
+        },
+        {
+            "processing", db => ReportingTestHost.Service<IVasProcessingService>(db)
+                .GetAsync(new VasProcessingQueryParams { From = From, ToExclusive = ToExclusive }, CancellationToken.None)
+        },
+        {
+            "revenue", db => ReportingTestHost.Service<IVasRevenueService>(db)
+                .GetAsync(new VasRevenueQueryParams { From = From, ToExclusive = ToExclusive }, CancellationToken.None)
+        },
+        {
+            "visa-types", db => ReportingTestHost.Service<IVisaTypesService>(db)
+                .GetAsync(new VisaTypesQueryParams { From = From, ToExclusive = ToExclusive }, CancellationToken.None)
+        },
+        {
+            "centres", db => ReportingTestHost.Service<ICentresService>(db)
+                .GetAsync(new CentresQueryParams { From = From, ToExclusive = ToExclusive, SortBy = "received" }, CancellationToken.None)
+        },
+        {
+            "lookups", async db =>
+            {
+                var lookups = ReportingTestHost.Service<ILookupService>(db);
+                await lookups.GetCountriesAsync(CancellationToken.None);
+                await lookups.GetCentresAsync(new CentreLookupQueryParams { CountryCode = "AE" }, CancellationToken.None);
+                await lookups.GetVisaTypesAsync(CancellationToken.None);
+            }
+        },
+    };
+
+    [Theory]
+    [MemberData(nameof(VasReports))]
+    public async Task Every_vas_report_and_lookup_translates_to_read_only_sql_over_the_gold_views(
+        string report, Func<ReportingDbContext, Task> run)
+    {
+        var (db, captured) = CreateContext();
+        await using var _ = db;
+
+        await run(db);
+
+        Assert.True(captured.Sql.Count >= 3, $"The {report} report ran {captured.Sql.Count} queries.");
+        Assert.All(captured.Sql, sql =>
+        {
+            Assert.StartsWith("SELECT", sql.TrimStart());
+            Assert.Contains("[gold].", sql);
+        });
+    }
+
+    [Fact]
+    public async Task Stage_funnel_joins_the_stage_rows_to_the_applications_in_scope_inside_the_database()
+    {
+        var (db, captured) = CreateContext();
+        await using var _ = db;
+
+        await ReportingTestHost.Service<IVasProcessingService>(db).GetAsync(
+            new VasProcessingQueryParams { From = From, ToExclusive = ToExclusive }, CancellationToken.None);
+
+        Assert.Contains(captured.Sql, sql =>
+            sql.Contains("[gold].[fact_application_stage]")
+            && sql.Contains("JOIN")
+            && sql.Contains("[gold].[fact_visa_application]")
+            && sql.Contains("GROUP BY"));
     }
 
     [Fact]
