@@ -5,7 +5,9 @@
     <ProjectReference Include="..\Vas.Shared\Vas.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.Monitor.OpenTelemetry.AspNetCore" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.Identity.Web" />
     <PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
 </Project>

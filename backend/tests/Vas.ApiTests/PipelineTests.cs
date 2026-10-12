@@ -1,17 +1,20 @@
 using System.Net;
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Hosting;
+using Vas.ApiTests.Support;
 using Vas.Shared.Constants;
 using Vas.Shared.Results;
 
 namespace Vas.ApiTests;
 
-public class PipelineTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+public class PipelineTests(ApiFactory factory) : IClassFixture<ApiFactory>
 {
+    private const string UnknownApiUrl = "/api/v1/does-not-exist";
+
     private readonly HttpClient _client = factory.CreateClient();
 
     [Fact]
-    public async Task Health_endpoint_returns_200()
+    public async Task Health_endpoint_returns_200_without_a_token()
     {
         var response = await _client.GetAsync("/healthz");
 
@@ -62,9 +65,17 @@ public class PipelineTests(WebApplicationFactory<Program> factory) : IClassFixtu
     }
 
     [Fact]
+    public async Task Unknown_api_route_without_a_token_gets_401_not_404()
+    {
+        var response = await _client.GetAsync(UnknownApiUrl);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
     public async Task Unknown_api_route_returns_404_in_the_envelope_with_the_trace_id()
     {
-        var response = await _client.GetAsync("/api/v1/does-not-exist");
+        var response = await factory.CreateClientWithToken(TestTokens.Viewer()).GetAsync(UnknownApiUrl);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
@@ -80,9 +91,9 @@ public class PipelineTests(WebApplicationFactory<Program> factory) : IClassFixtu
             .WithWebHostBuilder(builder => builder.UseSetting("RateLimiting:PermitLimit", "2"))
             .CreateClient();
 
-        await limited.GetAsync("/api/v1/does-not-exist");
-        await limited.GetAsync("/api/v1/does-not-exist");
-        var response = await limited.GetAsync("/api/v1/does-not-exist");
+        await limited.GetAsync(UnknownApiUrl);
+        await limited.GetAsync(UnknownApiUrl);
+        var response = await limited.GetAsync(UnknownApiUrl);
 
         Assert.Equal(HttpStatusCode.TooManyRequests, response.StatusCode);
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();

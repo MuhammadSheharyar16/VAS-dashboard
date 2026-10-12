@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend build and test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore VasDashboard.slnx
+
+      - name: Build
+        run: dotnet build VasDashboard.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test VasDashboard.slnx --configuration Release --no-build
+
+      - name: Check for vulnerable packages
+        run: |
+          dotnet list VasDashboard.slnx package --vulnerable --include-transitive | tee vulnerable.txt
+          if grep -q "has the following vulnerable packages" vulnerable.txt; then
+            echo "::error::Vulnerable NuGet packages found."
+            exit 1
+          fi
+
+  image:
+    name: Container image build
+    runs-on: ubuntu-latest
+    needs: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build --tag vas-dashboard:${{ github.sha }} .
+
+      - name: Start the container and check health
+        run: |
+          docker run --detach --name dashboard --publish 8080:8080 \
+            --env ASPNETCORE_ENVIRONMENT=Development vas-dashboard:${{ github.sha }}
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://localhost:8080/healthz; then exit 0; fi
+            sleep 1
+          done
+          docker logs dashboard
+          exit 1

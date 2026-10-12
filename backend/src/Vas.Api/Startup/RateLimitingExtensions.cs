@@ -1,6 +1,7 @@
 using System.Threading.RateLimiting;
 using Microsoft.Extensions.Options;
 using Vas.Application.Common.Options;
+using Vas.Infrastructure.Identity;
 using Vas.Shared.Results;
 
 namespace Vas.Api.Startup;
@@ -8,8 +9,6 @@ namespace Vas.Api.Startup;
 public static class RateLimitingExtensions
 {
     public const string ApiPolicy = "api";
-
-    private const string ObjectIdClaim = "http://schemas.microsoft.com/identity/claims/objectidentifier";
 
     public static IServiceCollection AddApiRateLimiting(this IServiceCollection services, IConfiguration configuration)
     {
@@ -48,8 +47,7 @@ public static class RateLimitingExtensions
     }
 
     private static string ResolvePartitionKey(HttpContext context) =>
-        context.User.FindFirst(ObjectIdClaim)?.Value
-        ?? context.User.FindFirst("oid")?.Value
+        EntraClaims.ObjectId(context.User)
         ?? context.Connection.RemoteIpAddress?.ToString()
         ?? "anonymous";
 }

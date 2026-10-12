@@ -6,9 +6,11 @@ using Vas.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSerilogLogging();
+builder.AddApiTelemetry();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
+builder.Services.AddApiAuthentication(builder.Configuration, builder.Environment);
 builder.Services.AddApiControllers();
 builder.Services.AddApiOpenApi();
 builder.Services.AddApiRateLimiting(builder.Configuration);
@@ -19,13 +21,17 @@ var app = builder.Build();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseApiStatusCodeEnvelope();
 app.UseSecurityHeaders();
 app.UseSpaStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseRateLimiter();
+app.UseAuthorization();
 
 app.MapApiHealthChecks();
 app.MapApiOpenApi();
+app.MapClientConfig();
 app.MapControllers().RequireRateLimiting(RateLimitingExtensions.ApiPolicy);
 app.MapSpaFallback();
 
