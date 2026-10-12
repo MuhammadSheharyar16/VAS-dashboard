@@ -96,6 +96,14 @@ docker compose up --build
 
 It serves on `http://localhost:8080`. Copy `.env.example` to `.env` to set values; without it the container starts in Development with placeholder Entra IDs.
 
+**Start it with compose, not with the Run button in Docker Desktop or a bare `docker run`.** Started on its own, the container has no settings, so it runs as Production and stops at once with a message naming what is missing (the Fabric endpoint and the Entra IDs). That is the startup guard working, not a fault. Compose sets `ASPNETCORE_ENVIRONMENT=Development` and maps port 8080. The equivalent by hand is:
+
+```bash
+docker run --rm -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development vas-dashboard:local
+```
+
+Until the React app is built into the image, `http://localhost:8080/` shows a one-line message saying the API is running. To see why a container stopped, run `docker compose logs` (or `docker logs <name>`).
+
 ## Configuration
 
 Settings come from `backend/src/Vas.Api/appsettings.json` and are overridden by environment variables (use `__` between levels). None of them are secrets, and the project has no Key Vault.

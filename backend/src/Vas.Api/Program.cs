@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSerilogLogging();
 builder.AddApiTelemetry();
+builder.AddApiRequestLimits();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);

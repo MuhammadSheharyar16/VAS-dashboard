@@ -16,6 +16,7 @@ public static class SerilogExtensions
                 .ReadFrom.Services(services)
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Application", builder.Environment.ApplicationName)
+                .Enrich.WithProperty("MachineName", Environment.MachineName)
                 .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName),
             preserveStaticLogger: true,
             writeToProviders: true);

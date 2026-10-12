@@ -7,6 +7,10 @@ public static class SpaExtensions
 {
     public const string ClientConfigPath = "/config.json";
 
+    public const string NoWebAppMessage =
+        "The AEGI VAS Dashboard API is running. The web app is not built into this image yet. "
+        + "Check /healthz for health. The API under /api/v1 needs a Microsoft Entra ID access token.";
+
     private const string IndexFile = "index.html";
 
     public static WebApplication UseSpaStaticFiles(this WebApplication app)
@@ -45,6 +49,11 @@ public static class SpaExtensions
         if (!string.IsNullOrEmpty(webRoot) && File.Exists(Path.Combine(webRoot, IndexFile)))
         {
             app.MapFallbackToFile(IndexFile).AllowAnonymous();
+        }
+        else
+        {
+            // Without the web app built in, say so at the root instead of answering with a bare 401.
+            app.MapGet("/", () => Results.Text(NoWebAppMessage)).AllowAnonymous().ExcludeFromDescription();
         }
 
         return app;

@@ -22,6 +22,15 @@ public class PipelineTests(ApiFactory factory) : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task Root_explains_that_the_api_is_running_when_no_web_app_is_built_in()
+    {
+        var response = await _client.GetAsync("/");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("API is running", await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
     public async Task Response_carries_a_generated_correlation_id_when_none_is_sent()
     {
         var response = await _client.GetAsync("/healthz");
