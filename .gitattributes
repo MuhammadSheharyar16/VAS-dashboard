@@ -1,0 +1,2 @@
+# The mock data files are generated with LF endings and compared against the generator in a test.
+backend/src/Vas.Infrastructure/MockData/*.json text eol=lf

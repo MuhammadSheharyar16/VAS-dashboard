@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Vas.Shared.Errors;
 using Vas.Shared.Results;
@@ -9,6 +10,8 @@ public static class ApiBehaviorExtensions
     public static IServiceCollection AddApiControllers(this IServiceCollection services)
     {
         services.AddControllers()
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
             .ConfigureApiBehaviorOptions(options =>
                 options.InvalidModelStateResponseFactory = CreateInvalidModelStateResponse);
 

@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vas.Application\Vas.Application.csproj" />
     <ProjectReference Include="..\..\src\Vas.Infrastructure\Vas.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\mock-data\generator\Vas.MockDataGenerator.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector">

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Vas.Application;
 using Vas.Application.Common.Interfaces;
@@ -39,7 +40,9 @@ public class ServiceRegistrationTests
     [Fact]
     public void Infrastructure_provides_a_utc_clock()
     {
-        using var provider = new ServiceCollection().AddInfrastructure().BuildServiceProvider();
+        using var provider = new ServiceCollection()
+            .AddInfrastructure(new ConfigurationBuilder().Build())
+            .BuildServiceProvider();
 
         var clock = provider.GetRequiredService<IDateTimeProvider>();
 

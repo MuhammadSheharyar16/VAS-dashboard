@@ -32,9 +32,7 @@ public class OpenApiTests(ApiFactory factory) : IClassFixture<ApiFactory>
     [Fact]
     public async Task Document_is_not_served_outside_development()
     {
-        var production = factory
-            .WithWebHostBuilder(builder => builder.UseEnvironment("Production"))
-            .CreateClient();
+        var production = factory.InEnvironment("Production").CreateClient();
 
         var response = await production.GetAsync(DocumentUrl);
 

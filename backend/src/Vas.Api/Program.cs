@@ -9,8 +9,8 @@ builder.AddSerilogLogging();
 builder.AddApiTelemetry();
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
-builder.Services.AddApiAuthentication(builder.Configuration, builder.Environment);
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApiAuthentication(builder.Configuration);
 builder.Services.AddApiControllers();
 builder.Services.AddApiOpenApi();
 builder.Services.AddApiRateLimiting(builder.Configuration);

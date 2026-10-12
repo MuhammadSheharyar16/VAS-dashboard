@@ -1,0 +1,10 @@
+[
+{"visa_type_code":"TOUR","visa_type_name":"Tourist","category":"Short stay"},
+{"visa_type_code":"BUS","visa_type_name":"Business","category":"Short stay"},
+{"visa_type_code":"STU","visa_type_name":"Student","category":"Long stay"},
+{"visa_type_code":"WORK","visa_type_name":"Employment","category":"Long stay"},
+{"visa_type_code":"FAM","visa_type_name":"Family Visit","category":"Short stay"},
+{"visa_type_code":"TRAN","visa_type_name":"Transit","category":"Short stay"},
+{"visa_type_code":"MED","visa_type_name":"Medical","category":"Short stay"},
+{"visa_type_code":"RES","visa_type_name":"Residence","category":"Long stay"}
+]

@@ -1,0 +1,17 @@
+[
+{"centre_code":"AE-DXB","centre_name":"Dubai Centre","country_code":"AE","city":"Dubai","daily_capacity":6},
+{"centre_code":"AE-AUH","centre_name":"Abu Dhabi Centre","country_code":"AE","city":"Abu Dhabi","daily_capacity":8},
+{"centre_code":"AE-SHJ","centre_name":"Sharjah Centre","country_code":"AE","city":"Sharjah","daily_capacity":5},
+{"centre_code":"SA-RUH","centre_name":"Riyadh Centre","country_code":"SA","city":"Riyadh","daily_capacity":8},
+{"centre_code":"SA-JED","centre_name":"Jeddah Centre","country_code":"SA","city":"Jeddah","daily_capacity":6},
+{"centre_code":"SA-DMM","centre_name":"Dammam Centre","country_code":"SA","city":"Dammam","daily_capacity":4},
+{"centre_code":"IN-BOM","centre_name":"Mumbai Centre","country_code":"IN","city":"Mumbai","daily_capacity":8},
+{"centre_code":"IN-DEL","centre_name":"New Delhi Centre","country_code":"IN","city":"New Delhi","daily_capacity":7},
+{"centre_code":"IN-BLR","centre_name":"Bengaluru Centre","country_code":"IN","city":"Bengaluru","daily_capacity":5},
+{"centre_code":"PK-KHI","centre_name":"Karachi Centre","country_code":"PK","city":"Karachi","daily_capacity":6},
+{"centre_code":"PK-LHE","centre_name":"Lahore Centre","country_code":"PK","city":"Lahore","daily_capacity":5},
+{"centre_code":"GB-LON","centre_name":"London Centre","country_code":"GB","city":"London","daily_capacity":6},
+{"centre_code":"GB-MAN","centre_name":"Manchester Centre","country_code":"GB","city":"Manchester","daily_capacity":4},
+{"centre_code":"EG-CAI","centre_name":"Cairo Centre","country_code":"EG","city":"Cairo","daily_capacity":6},
+{"centre_code":"EG-ALX","centre_name":"Alexandria Centre","country_code":"EG","city":"Alexandria","daily_capacity":4}
+]

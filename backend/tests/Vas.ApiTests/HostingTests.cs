@@ -9,11 +9,8 @@ public class HostingTests(ApiFactory factory) : IClassFixture<ApiFactory>
     private const string PublicHost = "dashboard.example.test";
 
     private HttpClient CreateProductionClient(bool forwardedHeadersEnabled) =>
-        factory.WithWebHostBuilder(builder =>
-            {
-                builder.UseEnvironment("Production");
-                builder.UseSetting("ForwardedHeaders_Enabled", forwardedHeadersEnabled ? "true" : "false");
-            })
+        factory.InEnvironment("Production", builder =>
+                builder.UseSetting("ForwardedHeaders_Enabled", forwardedHeadersEnabled ? "true" : "false"))
             .CreateClient();
 
     private static HttpRequestMessage HealthRequestForwardedAsHttps()

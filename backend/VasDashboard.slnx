@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/mock-data/" />
+  <Folder Name="/mock-data/generator/">
+    <Project Path="mock-data/generator/Vas.MockDataGenerator.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/Vas.Api/Vas.Api.csproj" />
     <Project Path="src/Vas.Application/Vas.Application.csproj" />

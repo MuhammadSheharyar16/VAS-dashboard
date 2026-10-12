@@ -33,6 +33,20 @@ public class ApiFactory : WebApplicationFactory<Program>
             }));
     }
 
+    /// <summary>
+    /// The same API as it must be configured outside Development: Fabric as the data source.
+    /// Nothing connects to Fabric unless a report is requested.
+    /// </summary>
+    public WebApplicationFactory<Program> InEnvironment(string environment, Action<IWebHostBuilder>? configure = null) =>
+        WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment(environment);
+            builder.UseSetting("Reporting:DataSource", "Fabric");
+            builder.UseSetting("Fabric:SqlEndpoint", "example.datawarehouse.fabric.microsoft.com");
+            builder.UseSetting("Fabric:Database", "gold_lakehouse");
+            configure?.Invoke(builder);
+        });
+
     public HttpClient CreateClientWithToken(string token)
     {
         var client = CreateClient();

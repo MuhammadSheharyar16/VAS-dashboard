@@ -160,12 +160,10 @@ public class AuthTests(ApiFactory factory) : IClassFixture<ApiFactory>
     public void Startup_fails_outside_development_when_the_entra_ids_are_placeholders()
     {
         const string placeholder = "00000000-0000-0000-0000-000000000000";
-        var production = factory.WithWebHostBuilder(builder =>
-        {
-            builder.UseEnvironment("Production");
-            builder.UseSetting("AzureAd:TenantId", placeholder);
-        });
+        var production = factory.InEnvironment(
+            "Production", builder => builder.UseSetting("AzureAd:TenantId", placeholder));
 
-        Assert.ThrowsAny<Exception>(() => production.CreateClient());
+        var exception = Assert.ThrowsAny<Exception>(() => production.CreateClient());
+        Assert.Contains("AzureAd", exception.ToString());
     }
 }

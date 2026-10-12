@@ -300,4 +300,15 @@ Closed on 12 Oct 2026: 7 (no Figma; own designs), 8 (English only), 9 (Recharts)
 | 25 | No export, no automatic polling, phone widths not specially designed |
 | 26 | This file lives at the repository root; no commits or pushes unless asked |
 | 27 | Backend code lives in a `backend/` folder, not at the repository root |
+
+**Made by Claude during implementation, 12 Oct 2026. Not yet confirmed by Sheharyar.**
+
+| # | Decision | Why |
+| --- | --- | --- |
+| A | The default 30-day view ends at the day of the last successful Gold refresh, not at today's date. If there is no refresh record it ends today | A nightly refresh means today has no data; mock data has a fixed end date and would otherwise show an empty default view |
+| B | The applications trend is by day for ranges up to 62 days and by month beyond that | A 24-month range by day is unreadable |
+| C | `DataSource=Mock` is accepted only when the environment is `Development`. A deployed Dev App Service that should demo on mock data must set `ASPNETCORE_ENVIRONMENT=Development` | An allow-list is safer than naming the environments to refuse |
+| D | The Executive Summary KPI set and definitions in `docs/kpi-mapping.md` are provisional | No KPI Mapping document yet |
+| E | Unknown `/api` routes return 401 to callers without a token, and 404 only to signed-in callers | Anonymous callers cannot probe which routes exist |
+| F | The mock JSON files are about 24 MB in the repository | 20,742 applications with about 100,000 stage rows, as section 3.1 specifies |
 | – | The Implementation Guide ranks below this file |

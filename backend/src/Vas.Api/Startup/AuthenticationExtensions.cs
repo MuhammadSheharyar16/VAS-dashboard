@@ -11,14 +11,13 @@ public static class AuthenticationExtensions
 
     public static IServiceCollection AddApiAuthentication(
         this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment)
+        IConfiguration configuration)
     {
         services.AddOptions<EntraOptions>()
             .Bind(configuration.GetSection(EntraOptions.SectionName))
             .ValidateDataAnnotations()
-            .Validate(
-                options => environment.IsDevelopment() || !options.HasPlaceholderIds(),
+            .Validate<IHostEnvironment>(
+                (options, environment) => environment.IsDevelopment() || !options.HasPlaceholderIds(),
                 "AzureAd TenantId, ClientId and SpaClientId must be set to real values outside Development.")
             .ValidateOnStart();
 
