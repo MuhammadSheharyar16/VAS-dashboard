@@ -2,7 +2,10 @@ import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 5179;
 
-/** The integration tests drive the assembled app in a real browser, on fixtures: no backend, no sign-in. */
+/**
+ * The integration tests drive the assembled app in a real browser. The app is the real one; the
+ * tests answer for Entra ID and the API at the network (tests/integration/fakeBackend.ts).
+ */
 export default defineConfig({
   testDir: './tests/integration',
   fullyParallel: true,
@@ -18,6 +21,6 @@ export default defineConfig({
     command: `npx vite --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
-    env: { VITE_API_BASE_URL: '/api/v1', VITE_USE_MOCK: 'true' },
+    env: { VITE_API_BASE_URL: '/api/v1' },
   },
 });

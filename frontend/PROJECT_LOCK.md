@@ -51,8 +51,8 @@ Locked: 12 October 2026. Source of each answer: the Q&A recorded in `project-spe
 | --- | --- |
 | Auth | Microsoft Entra ID through MSAL React, authorization code flow with PKCE. Token cache: `sessionStorage` |
 | Authorization | Screen codes from `/auth/me/permissions`; menu from `/auth/me/menu`. UX only; the backend enforces |
-| Data | Mock-first. `VITE_USE_MOCK=true` serves fixtures exported from the real backend and uses a fake signed-in user |
-| Configuration | `VITE_API_BASE_URL` and `VITE_USE_MOCK` from env; Entra IDs at runtime from `/config.json`. The app shows a configuration error screen if either env value is missing |
+| Data | Always from the API. The app has no mock mode and no fake user (Sheharyar's instruction, 13 Oct 2026). Mock or live is the API's setting; fixtures exported from the real backend live in `tests/fixtures/` for the tests only |
+| Configuration | `VITE_API_BASE_URL` from env; Entra IDs at runtime from `/config.json`. The app shows a configuration error screen if the env value is missing |
 | Sanitisation | Dates `yyyy-MM-dd`; codes of letters, digits, `-`, `_`, up to 20 characters; date range up to 24 months (specs 2.1) |
 | KPI logic | None in React. The API returns values, changes and statuses ready to show |
 | Print, PWA, offline, export | None |
@@ -76,11 +76,10 @@ Locked: 12 October 2026. Source of each answer: the Q&A recorded in `project-spe
 | Type-check and production build | `npm run build` |
 | Lint | `npm run lint` |
 | Unit and component tests | `npm test` |
-| Integration test (Playwright, mock mode) | `npm run test:integration` |
+| Integration test (Playwright; Entra ID and the API are answered at the network) | `npm run test:integration` |
 
 ## Open gaps
 
 - AEGI brand colours and logo (specs open question 17).
 - Real KPI thresholds and the KPI Mapping (the labels and the set of KPIs may change).
-- Real sign-in cannot be exercised until the Entra tenant exists.
-- In mock mode the filters are echoed back but the figures do not change, because the fixtures are one fixed export.
+- Real sign-in has been exercised only against the Dev registrations in the LogicEra tenant; AEGI's tenant is still to come.

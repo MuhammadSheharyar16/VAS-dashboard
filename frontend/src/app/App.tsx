@@ -56,7 +56,7 @@ export function App() {
           <ConfigErrorPage setting={env} />
         ) : (
           <QueryClientProvider client={queryClient}>
-            <AuthProvider env={env} fallback={<StartingPage />} errorFallback={<SignInFailedPage />}>
+            <AuthProvider fallback={<StartingPage />} errorFallback={<SignInFailedPage />}>
               <RepositoryProvider env={env}>
                 <BrowserRouter>
                   <AppRouter />

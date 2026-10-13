@@ -14,11 +14,8 @@ RUN npm ci
 COPY frontend/ ./
 
 # The API base path is the same everywhere because the app and the API share one origin.
-# VITE_USE_MOCK stays false for any image that is deployed; docker-compose sets it to true
-# so the dashboard can be seen locally without an Entra tenant.
-ARG VITE_USE_MOCK=false
-ENV VITE_API_BASE_URL=/api/v1 \
-    VITE_USE_MOCK=${VITE_USE_MOCK}
+# The web app has no mock mode: it always signs in and always calls the API.
+ENV VITE_API_BASE_URL=/api/v1
 RUN npm run build
 
 # ---- Build the API -------------------------------------------------------

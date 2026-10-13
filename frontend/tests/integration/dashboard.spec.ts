@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test';
+import { installFakeBackend, TEST_ACCESS_TOKEN } from './fakeBackend';
 
-test('an executive reads the summary, filters it, then explores the VAS sections', async ({ page }) => {
+test('an executive signs in, reads the summary, filters it, then explores the VAS sections', async ({ page }) => {
+  const apiCalls = await installFakeBackend(page);
+
   const consoleErrors: string[] = [];
   page.on('console', (message) => {
     if (message.type() === 'error') {
@@ -8,6 +11,7 @@ test('an executive reads the summary, filters it, then explores the VAS sections
     }
   });
 
+  // Opening the app asks for a sign-in first; only then is the dashboard shown.
   await page.goto('/');
 
   // The home route is the Executive Summary, with the menu the backend returned.
@@ -24,6 +28,9 @@ test('an executive reads the summary, filters it, then explores the VAS sections
   // A filter goes into the URL, so the view can be shared and survives a refresh.
   await page.getByLabel('Country').selectOption('AE');
   await expect(page).toHaveURL(/country=AE/);
+  await expect
+    .poll(() => apiCalls.some((call) => call.path === '/executive-summary' && call.query.get('countryCode') === 'AE'))
+    .toBe(true);
   await page.reload();
   await expect(page.getByLabel('Country')).toHaveValue('AE');
 
@@ -55,10 +62,17 @@ test('an executive reads the summary, filters it, then explores the VAS sections
   await page.getByRole('link', { name: /Finance/ }).click();
   await expect(page.getByRole('heading', { name: 'Finance is coming soon' })).toBeVisible();
 
+  // Every report came from the API, and every call carried the token from the sign-in.
+  expect(apiCalls.length).toBeGreaterThan(10);
+  expect(apiCalls.every((call) => call.authorization === `Bearer ${TEST_ACCESS_TOKEN}`)).toBe(true);
+
   expect(consoleErrors).toEqual([]);
 });
 
 test('an unknown address shows the not-found page inside the shell', async ({ page }) => {
+  await installFakeBackend(page);
+
+  // Sign-in returns the user to the address they asked for.
   await page.goto('/no-such-page');
 
   await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible();

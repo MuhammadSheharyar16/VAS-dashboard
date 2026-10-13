@@ -1,5 +1,4 @@
 import type { ApiClient } from '@/core/http/apiClient';
-import { loadFixture, MOCK_DELAY_MS } from '@/mocks';
 
 export interface CurrentUser {
   id: string;
@@ -32,14 +31,6 @@ export function createLiveSessionRepository(api: ApiClient): SessionRepository {
     getCurrentUser: () => api.get<CurrentUser>('me'),
     getMenu: () => api.get<MenuItem[]>('menu'),
     getPermissions: () => api.get<Permission[]>('permissions'),
-  };
-}
-
-export function createMockSessionRepository(delayMs = MOCK_DELAY_MS): SessionRepository {
-  return {
-    getCurrentUser: () => loadFixture<CurrentUser>('auth-me', delayMs),
-    getMenu: () => loadFixture<MenuItem[]>('auth-menu', delayMs),
-    getPermissions: () => loadFixture<Permission[]>('auth-permissions', delayMs),
   };
 }
 

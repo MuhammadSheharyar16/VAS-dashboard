@@ -1,8 +1,6 @@
 export interface AppEnv {
   /** Relative base path of the API, for example `/api/v1`. */
   apiBaseUrl: string;
-  /** True serves fixtures and a fake signed-in user. */
-  useMock: boolean;
 }
 
 export class ConfigError extends Error {}
@@ -13,7 +11,6 @@ export class ConfigError extends Error {}
  */
 export function readEnv(source: Record<string, unknown> = import.meta.env): AppEnv {
   const apiBaseUrl = source.VITE_API_BASE_URL;
-  const useMock = source.VITE_USE_MOCK;
 
   if (typeof apiBaseUrl !== 'string' || apiBaseUrl.trim() === '') {
     throw new ConfigError('VITE_API_BASE_URL');
@@ -23,9 +20,5 @@ export function readEnv(source: Record<string, unknown> = import.meta.env): AppE
     throw new ConfigError('VITE_API_BASE_URL');
   }
 
-  if (useMock !== 'true' && useMock !== 'false') {
-    throw new ConfigError('VITE_USE_MOCK');
-  }
-
-  return { apiBaseUrl: apiBaseUrl.replace(/\/+$/, ''), useMock: useMock === 'true' };
+  return { apiBaseUrl: apiBaseUrl.replace(/\/+$/, '') };
 }

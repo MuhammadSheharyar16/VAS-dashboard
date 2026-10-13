@@ -91,7 +91,7 @@ The Fabric Gold layer is **not available yet**. Development, demos and automated
 | --- | --- | --- |
 | Mock files | Gold-shaped rows as JSON, one file per Gold object (`dim_country.json`, `fact_visa_application.json.gz`, ...; the three fact files are gzip-compressed), embedded in `backend/src/Vas.Infrastructure/MockData/`. A fixed-seed generator in `backend/mock-data/generator/` writes them | Not used |
 | Backend | `IReportingDbContext` exposes one `IQueryable<T>` per Gold object. Services write their KPI queries once in LINQ. With `DataSource=Mock`, `JsonReportingSource` serves the JSON rows in memory through an async-capable query provider, so the same async LINQ runs on both sources; with `DataSource=Fabric`, the EF Core `ReportingDbContext` serves the same `IQueryable<T>` from the SQL endpoint | Set `DataSource=Fabric` and the Fabric connection; adjust the `ToView`/column mappings in `Infrastructure/Persistence/Configurations/` to the real Gold names |
-| Frontend | `VITE_USE_MOCK=true` uses JSON fixtures in `frontend/src/mocks/` behind the same repository interface as the live API, for UI work without the backend. In this mode only, the frontend uses a fake signed-in user | `VITE_USE_MOCK=false` |
+| Frontend | No mock mode (decision 28). The frontend always signs in with Entra ID and calls the API; the mock data it shows comes from the API running with `DataSource=Mock`. Fixtures exported from the real backend live in `frontend/tests/fixtures/` for the tests only | Nothing to switch in the frontend |
 | Tests | Unit and application tests run every service against the JSON source | Add SQL translation tests against the real endpoint once Fabric is available |
 
 **What this does and doesn't prove:** the KPI logic (the LINQ in each service) runs on mock data from day one. The SQL that EF Core generates from it, and its performance on Fabric, are only exercised once the Gold layer is available. In-memory LINQ can also differ from SQL on nulls, text casing and division, so passing mock tests do not prove Fabric results. That is milestone M2 in section 8, and the first thing to test when Fabric arrives.
@@ -298,11 +298,12 @@ Closed on 12 Oct 2026: 7 (no Figma; own designs), 8 (English only), 9 (Recharts)
 | 20 | UTC date boundaries and UTC freshness label |
 | 21 | No currency conversion; totals per currency; mock uses AED |
 | 22 | Without an Entra tenant, Phase 1 is verified with test tokens; M1 when IDs arrive |
-| 23 | Fake signed-in user in frontend mock mode only; no API bypass |
+| 23 | ~~Fake signed-in user in frontend mock mode only~~; no API bypass. Replaced by decision 28 |
 | 24 | Dev App Service may run `DataSource=Mock` for demos |
 | 25 | No export, no automatic polling, phone widths not specially designed |
 | 26 | This file lives at the repository root; no commits or pushes unless asked |
 | 27 | Backend code lives in a `backend/` folder, not at the repository root |
+| 28 | 13 Oct 2026: the frontend has no mock mode and no fake user. Every run signs in with Entra ID and calls the API; mock data comes only from the API in Development (`DataSource=Mock`). Local development uses Dev app registrations in the LogicEra tenant, with the IDs supplied at run time from a git-ignored `.env` |
 
 **Made by Claude during implementation, 12 Oct 2026. Not yet confirmed by Sheharyar.**
 
@@ -320,8 +321,8 @@ Closed on 12 Oct 2026: 7 (no Figma; own designs), 8 (English only), 9 (Recharts)
 | K | The frontend lives in `frontend/`, not `web/` (Sheharyar's instruction) | |
 | L | The design has depth and motion (Sheharyar's instruction: "3D and animated"): pointer-tilt KPI cards, a rotating 3D globe of the top countries, animated numbers and transitions. All of it switches off under `prefers-reduced-motion`. Adds `motion` and `three`; three.js is downloaded only with the globe panel | Explicit instruction. Recorded in `frontend/PROJECT_LOCK.md` |
 | M | Light is the default theme; dark is available from the toggle (Sheharyar's preference) | |
-| N | In frontend mock mode the fixtures are one fixed export of the backend's real output. The chosen filters are shown and echoed back, but the figures do not change | Mock-mode filtering would mean re-implementing the KPI logic in React, which the specs forbid |
-| O | `docker compose` builds the web app with `VITE_USE_MOCK=true` so the dashboard can be seen locally without a tenant. A deployed image is built without that argument and always signs in | The local image would otherwise redirect to a sign-in that cannot succeed |
+| N | Withdrawn by decision 28: there is no frontend mock mode. The fixed export of the backend's output is now test data only (`frontend/tests/fixtures/`) | |
+| O | Withdrawn by decision 28: `docker compose` builds the same image as every environment; it signs in with Entra ID and needs the Entra IDs in `.env` | |
 | P | The VAS page shows its six areas as tabs and requests only the open one | Six reports at once is six requests per filter change |
 | Q | Icons are `lucide-react`; the font is Inter, bundled with the app | No request to an external font or icon host |
 | I | Every `/api/v1/vas/...` report needs the `VAS` screen permission; the lookups and `/auth/me` need the `DASHBOARD` permission. The Viewer role has both | One role today, but the screens stay separable |

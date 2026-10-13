@@ -51,7 +51,6 @@ jobs:
         working-directory: frontend
     env:
       VITE_API_BASE_URL: /api/v1
-      VITE_USE_MOCK: "false"
     steps:
       - uses: actions/checkout@v4
 

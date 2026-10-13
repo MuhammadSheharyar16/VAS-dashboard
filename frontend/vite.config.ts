@@ -25,7 +25,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/unit/**/*.spec.{ts,tsx}', 'tests/component/**/*.spec.{ts,tsx}'],
-    env: { VITE_API_BASE_URL: '/api/v1', VITE_USE_MOCK: 'true' },
+    env: { VITE_API_BASE_URL: '/api/v1' },
     css: false,
   },
 });

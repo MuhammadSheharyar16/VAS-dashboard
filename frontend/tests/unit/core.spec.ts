@@ -61,22 +61,17 @@ describe('validateRange', () => {
 });
 
 describe('readEnv', () => {
-  it('reads the base URL and the mock switch', () => {
-    expect(readEnv({ VITE_API_BASE_URL: '/api/v1/', VITE_USE_MOCK: 'false' })).toEqual({
-      apiBaseUrl: '/api/v1',
-      useMock: false,
-    });
+  it('reads the base URL without a trailing slash', () => {
+    expect(readEnv({ VITE_API_BASE_URL: '/api/v1/' })).toEqual({ apiBaseUrl: '/api/v1' });
   });
 
   it.each([
-    ['the base URL is missing', { VITE_USE_MOCK: 'true' }, 'VITE_API_BASE_URL'],
-    ['the base URL is empty', { VITE_API_BASE_URL: ' ', VITE_USE_MOCK: 'true' }, 'VITE_API_BASE_URL'],
-    ['the base URL names a host', { VITE_API_BASE_URL: 'https://example.test/api', VITE_USE_MOCK: 'true' }, 'VITE_API_BASE_URL'],
-    ['the base URL is protocol-relative', { VITE_API_BASE_URL: '//example.test/api', VITE_USE_MOCK: 'true' }, 'VITE_API_BASE_URL'],
-    ['the mock switch is missing', { VITE_API_BASE_URL: '/api/v1' }, 'VITE_USE_MOCK'],
-    ['the mock switch is not true or false', { VITE_API_BASE_URL: '/api/v1', VITE_USE_MOCK: 'yes' }, 'VITE_USE_MOCK'],
-  ])('fails closed when %s', (_label, source, setting) => {
-    expect(() => readEnv(source)).toThrow(new ConfigError(setting));
+    ['the base URL is missing', {}],
+    ['the base URL is empty', { VITE_API_BASE_URL: ' ' }],
+    ['the base URL names a host', { VITE_API_BASE_URL: 'https://example.test/api' }],
+    ['the base URL is protocol-relative', { VITE_API_BASE_URL: '//example.test/api' }],
+  ])('fails closed when %s', (_label, source) => {
+    expect(() => readEnv(source)).toThrow(new ConfigError('VITE_API_BASE_URL'));
   });
 });
 

@@ -1,5 +1,4 @@
 import type { ApiClient } from '@/core/http/apiClient';
-import { echoFilters, loadFixture, MOCK_DELAY_MS } from '@/mocks';
 import type {
   ApplicationsTrend,
   BreakdownRow,
@@ -137,59 +136,5 @@ export function createLiveVasRepository(api: ApiClient): VasRepository {
     getRevenue: (query, signal) => api.get<VasRevenue>('vasRevenue', query, signal),
     getVisaTypes: (query, signal) => api.get<VasVisaTypes>('vasVisaTypes', query, signal),
     getCentres: (query, paging, signal) => api.get<VasCentres>('vasCentres', { ...query, ...paging }, signal),
-  };
-}
-
-const CENTRE_SORT_VALUE: Record<CentreSortField, (row: CentreRow) => number | string | null> = {
-  centreName: (row) => row.centreName,
-  received: (row) => row.received,
-  pending: (row) => row.pending,
-  averageTurnaroundDays: (row) => row.averageTurnaroundDays,
-  capacityUtilisation: (row) => row.capacityUtilisationPercent,
-};
-
-/** Orders and pages the fixture rows the way the API would, so the table behaves the same in mock mode. */
-export function pageCentres(rows: CentreRow[], paging: CentrePaging): PagedResponse<CentreRow> {
-  const valueOf = CENTRE_SORT_VALUE[paging.sortBy];
-  const sign = paging.sortDirection === 'Descending' ? -1 : 1;
-
-  const sorted = [...rows].sort((a, b) => {
-    const [left, right] = [valueOf(a), valueOf(b)];
-    if (left === null || right === null) {
-      return left === right ? 0 : left === null ? 1 : -1;
-    }
-
-    const order = typeof left === 'string' ? left.localeCompare(String(right)) : left - Number(right);
-    return order !== 0 ? order * sign : a.centreCode.localeCompare(b.centreCode);
-  });
-
-  const totalPages = Math.ceil(sorted.length / paging.pageSize);
-  const start = (paging.page - 1) * paging.pageSize;
-
-  return {
-    items: sorted.slice(start, start + paging.pageSize),
-    totalCount: sorted.length,
-    page: paging.page,
-    pageSize: paging.pageSize,
-    totalPages,
-    hasPreviousPage: paging.page > 1,
-    hasNextPage: paging.page < totalPages,
-  };
-}
-
-export function createMockVasRepository(delayMs = MOCK_DELAY_MS): VasRepository {
-  const load = async <T extends { meta: ReportMeta }>(name: string, query: ReportQuery) =>
-    echoFilters(await loadFixture<T>(name, delayMs), query);
-
-  return {
-    getApplications: (query) => load<VasApplications>('vas-applications', query),
-    getOutcomes: (query) => load<VasOutcomes>('vas-outcomes', query),
-    getProcessing: (query) => load<VasProcessing>('vas-processing', query),
-    getRevenue: (query) => load<VasRevenue>('vas-revenue', query),
-    getVisaTypes: (query) => load<VasVisaTypes>('vas-visa-types', query),
-    getCentres: async (query, paging) => {
-      const report = await load<VasCentres>('vas-centres', query);
-      return { ...report, centres: pageCentres(report.centres.items, paging) };
-    },
   };
 }

@@ -44,8 +44,8 @@ frontend/                the React app
     core/                    config, http client, sign-in, text, theme tokens, sanitisers
     shared/                  components, hooks, formatting
     features/                executive-summary, vas, session, filters (screen + view-model + repository)
-    mocks/                   fixtures used when VITE_USE_MOCK=true
   tests/                     unit, component, integration (Playwright)
+    fixtures/                the backend's exported output, used by the tests only
 docs/                    setup guides and the KPI mapping
 Dockerfile               the one image
 docker-compose.yml       run that image locally
@@ -68,21 +68,21 @@ npm install               # once
 npm run dev
 ```
 
-It opens on `http://localhost:5173` (Vite picks the next free port if that one is taken, and prints it). With `VITE_USE_MOCK=true`, the default, it needs no backend and no sign-in: it shows fixtures and a sample user, and a "Mock data" badge says so. The filters work and are kept in the URL, but the mock figures are one fixed export, so they do not change with the filters.
+It opens on `http://localhost:5173` (Vite picks the next free port if that one is taken, and prints it; only 5173 and 8080 are registered as sign-in redirect addresses).
 
-With `VITE_USE_MOCK=false` it calls the API on port 5080 through the dev proxy and signs in with Microsoft Entra ID. That needs the tenant set up ([docs/entra-setup.md](docs/entra-setup.md)).
+The web app has no mock mode. Every run signs in with Microsoft Entra ID and calls the API on port 5080 through the dev proxy, so start the API first (next section) and have the tenant set up ([docs/entra-setup.md](docs/entra-setup.md)). Whether the figures are mock or live is the API's setting: in Development it serves its embedded mock data, and the page shows a "Mock data" badge because the API says so.
 
 | Command (in `frontend/`) | Purpose |
 | --- | --- |
 | `npm run lint` | ESLint, including the no-console rule |
 | `npm run build` | Type-check and production build |
 | `npm test` | Unit and component tests |
-| `npm run test:integration` | Browser tests on fixtures. Run `npx playwright install chromium` once first |
+| `npm run test:integration` | Browser tests of the real app; the tests answer for Entra ID and the API at the network. Run `npx playwright install chromium` once first |
 
-When the API's response shapes change, regenerate the fixtures from the real services:
+The tests use fixtures exported from the real services (`frontend/tests/fixtures/`); the app never reads them. When the API's response shapes change, regenerate them:
 
 ```bash
-dotnet run --project backend/mock-data/fixture-exporter -- frontend/src/mocks/fixtures backend/src/Vas.Api/appsettings.json
+dotnet run --project backend/mock-data/fixture-exporter -- frontend/tests/fixtures backend/src/Vas.Api/appsettings.json
 ```
 
 ## Run the API
@@ -92,6 +92,14 @@ dotnet run --project backend/src/Vas.Api
 ```
 
 It listens on `http://localhost:5080`.
+
+To sign in for real from the web app, the API needs the Entra IDs. Put them in a root `.env` (copy `.env.example`) and start the API with the script, which passes them in at run time:
+
+```powershell
+./run-dev.ps1
+```
+
+Then run `npm run dev` in `frontend/`. Opening `http://localhost:5173` asks for a Microsoft sign-in and loads every report from the API.
 
 | URL | What you get |
 | --- | --- |
@@ -133,7 +141,7 @@ The API tests start the real application in memory. They replace only the token 
 docker compose up --build
 ```
 
-It serves on `http://localhost:8080`. Copy `.env.example` to `.env` to set values; without it the container starts in Development with placeholder Entra IDs.
+It serves on `http://localhost:8080`. Copy `.env.example` to `.env` and set the Entra IDs; without them the container starts in Development with placeholder IDs and the sign-in cannot succeed.
 
 **Start it with compose, not with the Run button in Docker Desktop or a bare `docker run`.** Started on its own, the container has no settings, so it runs as Production and stops at once with a message naming what is missing (the Fabric endpoint and the Entra IDs). That is the startup guard working, not a fault. Compose sets `ASPNETCORE_ENVIRONMENT=Development` and maps port 8080. The equivalent by hand is:
 
@@ -141,7 +149,7 @@ It serves on `http://localhost:8080`. Copy `.env.example` to `.env` to set value
 docker run --rm -p 8080:8080 -e ASPNETCORE_ENVIRONMENT=Development vas-dashboard:local
 ```
 
-The image contains the React app and the API on one origin. Compose builds the web app in mock mode (`VITE_USE_MOCK=true`), so `http://localhost:8080/` shows the full dashboard on fixtures with no sign-in. An image built without that argument, which is what gets deployed, always signs in with Entra ID. To see why a container stopped, run `docker compose logs` (or `docker logs <name>`).
+The image contains the React app and the API on one origin, and it is the same image everywhere: it always signs in with Entra ID. Under compose the API runs in Development, so the dashboard shows the API's mock data after sign-in. To see why a container stopped, run `docker compose logs` (or `docker logs <name>`).
 
 ## Configuration
 

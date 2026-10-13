@@ -26,9 +26,9 @@ using Vas.Application.Features.VisaTypes.Services;
 using Vas.Infrastructure.Persistence.Mock;
 using Vas.Shared.Constants;
 
-// Writes the frontend's mock fixtures by running the real services over the embedded mock data,
+// Writes the frontend's test fixtures by running the real services over the embedded mock data,
 // so the fixtures always have the shape and the figures the API returns. Run from the repository root:
-//   dotnet run --project backend/mock-data/fixture-exporter -- frontend/src/mocks/fixtures backend/src/Vas.Api/appsettings.json
+//   dotnet run --project backend/mock-data/fixture-exporter -- frontend/tests/fixtures backend/src/Vas.Api/appsettings.json
 
 if (args.Length != 2)
 {

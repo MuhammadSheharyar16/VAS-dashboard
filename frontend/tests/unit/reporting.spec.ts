@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createMockExecutiveSummaryRepository } from '@/features/executive-summary/api/executiveSummaryRepository';
 import { canView } from '@/features/session/api/sessionRepository';
-import { createMockVasRepository, pageCentres, type CentreRow } from '@/features/vas/api/vasRepository';
+import type { CentreRow } from '@/features/vas/api/vasRepository';
 import { isEmptyReport, isVasSection } from '@/features/vas/useVasViewModel';
 import { parseFilters } from '@/shared/hooks/useReportFilters';
 import { toReportQuery, type BreakdownRow } from '@/shared/models/reporting';
@@ -16,6 +15,9 @@ import {
   formatPeriod,
   NOT_AVAILABLE,
 } from '@/shared/utils/format';
+
+import { pageCentres } from '../support/centrePaging';
+import { fixtureExecutiveSummaryRepository, fixtureVasRepository } from '../support/fixtureRepositories';
 
 const parse = (query: string) => parseFilters(new URLSearchParams(query));
 
@@ -160,7 +162,7 @@ describe('chart mappers', () => {
   });
 });
 
-describe('centre paging in mock mode', () => {
+describe('centre paging of the fixture backend', () => {
   const centre = (code: string, received: number, turnaround: number | null): CentreRow => ({
     centreCode: code,
     centreName: `${code} Centre`,
@@ -202,11 +204,11 @@ describe('centre paging in mock mode', () => {
   });
 });
 
-describe('mock repositories', () => {
+describe('exported fixtures', () => {
   const query = toReportQuery(parse('country=AE&compare=0').filters);
 
   it('serve the exported fixture and echo the chosen filters back', async () => {
-    const summary = await createMockExecutiveSummaryRepository(0).get(query);
+    const summary = await fixtureExecutiveSummaryRepository().get(query);
 
     expect(summary.meta.dataSource).toBe('Mock');
     expect(summary.meta.filter).toMatchObject({ countryCode: 'AE', compare: 'None' });
@@ -215,7 +217,7 @@ describe('mock repositories', () => {
   });
 
   it('serve every VAS section in the shape the screens read', async () => {
-    const vas = createMockVasRepository(0);
+    const vas = fixtureVasRepository();
     const paging = { page: 1, pageSize: 10, sortBy: 'received', sortDirection: 'Descending' } as const;
 
     const [applications, outcomes, processing, revenue, visaTypes, centres] = await Promise.all([

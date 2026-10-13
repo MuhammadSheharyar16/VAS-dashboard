@@ -5,16 +5,12 @@ import { AppRouter } from '@/app/router';
 import { ApiError } from '@/core/http/apiClient';
 import { t } from '@/core/i18n';
 import { ExecutiveSummaryScreen } from '@/features/executive-summary/ExecutiveSummaryScreen';
-import {
-  createMockExecutiveSummaryRepository,
-  type ExecutiveSummary,
-  type ExecutiveSummaryRepository,
-} from '@/features/executive-summary/api/executiveSummaryRepository';
-import { createMockSessionRepository } from '@/features/session/api/sessionRepository';
+import type { ExecutiveSummary, ExecutiveSummaryRepository } from '@/features/executive-summary/api/executiveSummaryRepository';
 import { VasScreen } from '@/features/vas/VasScreen';
 import { KpiCard } from '@/shared/components/KpiCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import type { KpiCard as KpiCardModel } from '@/shared/models/reporting';
+import { fixtureExecutiveSummaryRepository, fixtureSessionRepository } from '../support/fixtureRepositories';
 import { renderApp } from '../support/render';
 
 const kpi = (overrides: Partial<KpiCardModel> = {}): KpiCardModel => ({
@@ -106,7 +102,7 @@ describe('ExecutiveSummaryScreen', () => {
   });
 
   it('shows the empty state when nothing was received in the period', async () => {
-    const full = await createMockExecutiveSummaryRepository(0).get({});
+    const full = await fixtureExecutiveSummaryRepository().get({});
     const empty: ExecutiveSummary = {
       ...full,
       kpis: full.kpis.map((card) => (card.key === 'applicationsReceived' ? { ...card, value: 0 } : card)),
@@ -120,7 +116,7 @@ describe('ExecutiveSummaryScreen', () => {
 
   it('shows the error state with a reference and loads again on retry', async () => {
     const user = userEvent.setup();
-    const full = await createMockExecutiveSummaryRepository(0).get({});
+    const full = await fixtureExecutiveSummaryRepository().get({});
     const get = vi
       .fn<ExecutiveSummaryRepository['get']>()
       .mockRejectedValueOnce(new ApiError('server', 500, [], 'trace-123'))
@@ -138,7 +134,7 @@ describe('ExecutiveSummaryScreen', () => {
 
   it('asks for a new report with the chosen country and never with an unsafe one', async () => {
     const user = userEvent.setup();
-    const full = await createMockExecutiveSummaryRepository(0).get({});
+    const full = await fixtureExecutiveSummaryRepository().get({});
     const get = vi.fn<ExecutiveSummaryRepository['get']>().mockResolvedValue(full);
 
     renderApp(<ExecutiveSummaryScreen />, {
@@ -236,7 +232,7 @@ describe('AppRouter', () => {
   });
 
   it('sends a user without the screen permission to the access-denied page', async () => {
-    const session = createMockSessionRepository(0);
+    const session = fixtureSessionRepository();
 
     renderApp(<AppRouter />, {
       route: '/vas',

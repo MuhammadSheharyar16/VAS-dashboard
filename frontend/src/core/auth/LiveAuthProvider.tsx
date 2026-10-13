@@ -14,6 +14,72 @@ interface SignedIn {
   scopes: string[];
 }
 
+const RETURN_TO_KEY = 'vas.returnTo';
+
+/** Remembers the address the user opened, so a shared or bookmarked view survives the sign-in round trip. */
+function rememberReturnAddress(): void {
+  try {
+    sessionStorage.setItem(RETURN_TO_KEY, window.location.pathname + window.location.search);
+  } catch {
+    // Without storage the user lands on the home page after sign-in.
+  }
+}
+
+/** Puts the remembered address back before the router reads it. Only a path on this site is accepted. */
+function restoreReturnAddress(): void {
+  try {
+    const returnTo = sessionStorage.getItem(RETURN_TO_KEY);
+    sessionStorage.removeItem(RETURN_TO_KEY);
+
+    if (returnTo?.startsWith('/') && !returnTo.startsWith('//')) {
+      window.history.replaceState(null, '', returnTo);
+    }
+  } catch {
+    // Nothing remembered.
+  }
+}
+
+/** Resolves to null when the browser is on its way to the sign-in page. */
+async function startSignIn(): Promise<SignedIn | null> {
+  const config = await loadRuntimeConfig();
+  const client = new PublicClientApplication({
+    auth: {
+      clientId: config.clientId,
+      authority: config.authority,
+      redirectUri: window.location.origin,
+      postLogoutRedirectUri: window.location.origin,
+    },
+    cache: { cacheLocation: 'sessionStorage' },
+  });
+
+  await client.initialize();
+  const redirectResult = await client.handleRedirectPromise();
+  const account = redirectResult?.account ?? client.getActiveAccount() ?? client.getAllAccounts()[0];
+  const scopes = [config.apiScope];
+
+  if (!account) {
+    // Leaves the page; the fallback stays up until the browser navigates.
+    rememberReturnAddress();
+    await client.loginRedirect({ scopes });
+    return null;
+  }
+
+  if (redirectResult) {
+    restoreReturnAddress();
+  }
+
+  client.setActiveAccount(account);
+  return { client, account, scopes };
+}
+
+let signInOnce: Promise<SignedIn | null> | null = null;
+
+/** One sign-in per page load, however many times the provider mounts (React mounts it twice in development). */
+function signIn(): Promise<SignedIn | null> {
+  signInOnce ??= startSignIn();
+  return signInOnce;
+}
+
 type State = { phase: 'starting' } | { phase: 'failed' } | ({ phase: 'ready' } & SignedIn);
 
 interface LiveAuthProviderProps {
@@ -32,40 +98,17 @@ export default function LiveAuthProvider({ fallback, errorFallback, children }: 
   useEffect(() => {
     let cancelled = false;
 
-    const start = async () => {
-      const config = await loadRuntimeConfig();
-      const client = new PublicClientApplication({
-        auth: {
-          clientId: config.clientId,
-          authority: config.authority,
-          redirectUri: window.location.origin,
-          postLogoutRedirectUri: window.location.origin,
-        },
-        cache: { cacheLocation: 'sessionStorage' },
+    signIn()
+      .then((signedIn) => {
+        if (signedIn && !cancelled) {
+          setState({ phase: 'ready', ...signedIn });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setState({ phase: 'failed' });
+        }
       });
-
-      await client.initialize();
-      const redirectResult = await client.handleRedirectPromise();
-      const account = redirectResult?.account ?? client.getActiveAccount() ?? client.getAllAccounts()[0];
-      const scopes = [config.apiScope];
-
-      if (!account) {
-        // Leaves the page; the fallback stays up until the browser navigates.
-        await client.loginRedirect({ scopes });
-        return;
-      }
-
-      client.setActiveAccount(account);
-      if (!cancelled) {
-        setState({ phase: 'ready', client, account, scopes });
-      }
-    };
-
-    start().catch(() => {
-      if (!cancelled) {
-        setState({ phase: 'failed' });
-      }
-    });
 
     return () => {
       cancelled = true;
