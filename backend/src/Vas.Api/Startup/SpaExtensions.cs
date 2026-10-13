@@ -13,10 +13,29 @@ public static class SpaExtensions
 
     private const string IndexFile = "index.html";
 
+    private const string HashedAssetsPath = "/assets";
+
+    // The page names its scripts by content hash. A browser that keeps an old page keeps asking for
+    // scripts the next image no longer has, so the page is revalidated on every load and only the
+    // hashed files are cached for good.
+    private static readonly StaticFileOptions SpaFileOptions = new()
+    {
+        OnPrepareResponse = context =>
+        {
+            var isHashedAsset = context.Context.Request.Path.StartsWithSegments(
+                HashedAssetsPath, StringComparison.OrdinalIgnoreCase)
+                && !string.Equals(context.File.Name, IndexFile, StringComparison.OrdinalIgnoreCase);
+
+            context.Context.Response.Headers.CacheControl = isHashedAsset
+                ? "public, max-age=31536000, immutable"
+                : "no-cache";
+        },
+    };
+
     public static WebApplication UseSpaStaticFiles(this WebApplication app)
     {
         app.UseDefaultFiles();
-        app.UseStaticFiles();
+        app.UseStaticFiles(SpaFileOptions);
 
         return app;
     }
@@ -48,7 +67,7 @@ public static class SpaExtensions
         var webRoot = app.Environment.WebRootPath;
         if (!string.IsNullOrEmpty(webRoot) && File.Exists(Path.Combine(webRoot, IndexFile)))
         {
-            app.MapFallbackToFile(IndexFile).AllowAnonymous();
+            app.MapFallbackToFile(IndexFile, SpaFileOptions).AllowAnonymous();
         }
         else
         {
