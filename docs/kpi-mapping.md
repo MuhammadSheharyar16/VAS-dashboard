@@ -16,7 +16,7 @@ The names live in one file: `backend/src/Vas.Infrastructure/Persistence/Configur
 | `gold.dim_centre` | One row per centre | Centre filter |
 | `gold.dim_visa_type` | One row per visa type | Visa-type filter |
 | `gold.fact_visa_application` | One row per application | Volumes, outcomes, turnaround, trend |
-| `gold.fact_application_stage` | One row per application per stage | Not read yet (VAS processing report) |
+| `gold.fact_application_stage` | One row per application per stage | Stage funnel (VAS processing report) |
 | `gold.fact_vas_revenue` | One row per transaction | Revenue |
 | `gold.refresh_log` | One row per refresh | Data freshness, default date range |
 

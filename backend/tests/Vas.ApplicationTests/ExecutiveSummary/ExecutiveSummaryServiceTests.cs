@@ -347,4 +347,22 @@ public class ExecutiveSummaryServiceTests
 
         Assert.Equal(expectedField, Assert.Single(exception.Errors).PropertyName);
     }
+
+    [Fact]
+    public async Task A_centre_from_another_country_than_the_selected_one_is_rejected()
+    {
+        var query = June with { CountryCode = "AE", CentreCode = "IN-BOM" };
+
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => GetAsync(query));
+
+        Assert.Equal(nameof(ReportFilter.CentreCode), Assert.Single(exception.Errors).PropertyName);
+    }
+
+    [Fact]
+    public async Task A_centre_in_the_selected_country_is_accepted()
+    {
+        var summary = await GetAsync(June with { CountryCode = "AE", CentreCode = "AE-DXB" });
+
+        Assert.Equal("AE-DXB", summary.Meta.Filter.CentreCode);
+    }
 }

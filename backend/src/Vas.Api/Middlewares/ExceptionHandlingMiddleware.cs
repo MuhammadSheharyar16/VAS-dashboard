@@ -1,3 +1,5 @@
+using System.Data.Common;
+using Azure.Identity;
 using Vas.Application.Common.Exceptions;
 using Vas.Shared.Errors;
 using Vas.Shared.Results;
@@ -7,6 +9,7 @@ namespace Vas.Api.Middlewares;
 public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
 {
     private const string UnexpectedErrorMessage = "An unexpected error occurred.";
+    private const string DataSourceUnavailableMessage = "The reporting data is temporarily unavailable. Try again shortly.";
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -52,8 +55,27 @@ public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Ex
             ForbiddenException => (StatusCodes.Status403Forbidden, exception.Message, []),
             NotFoundException => (StatusCodes.Status404NotFound, exception.Message, []),
             BusinessRuleException => (StatusCodes.Status422UnprocessableEntity, exception.Message, []),
+            _ when IsDataSourceFailure(exception) => (
+                StatusCodes.Status503ServiceUnavailable, DataSourceUnavailableMessage, []),
             _ => (StatusCodes.Status500InternalServerError, UnexpectedErrorMessage, []),
         };
+
+    /// <summary>
+    /// True when the reporting source could not be reached or queried: a SQL error, or no token for it.
+    /// The retry strategy wraps the cause, so the whole chain is checked.
+    /// </summary>
+    private static bool IsDataSourceFailure(Exception exception)
+    {
+        for (var current = exception; current is not null; current = current.InnerException)
+        {
+            if (current is DbException or AuthenticationFailedException)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private static string? ToCamelCase(string? name) =>
         string.IsNullOrEmpty(name) ? name : char.ToLowerInvariant(name[0]) + name[1..];

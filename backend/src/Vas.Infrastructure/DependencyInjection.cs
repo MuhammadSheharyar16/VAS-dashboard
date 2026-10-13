@@ -22,6 +22,10 @@ namespace Vas.Infrastructure;
 
 public static class DependencyInjection
 {
+    private const int FabricMaxRetries = 3;
+
+    private static readonly TimeSpan FabricMaxRetryDelay = TimeSpan.FromSeconds(5);
+
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
@@ -84,7 +88,10 @@ public static class DependencyInjection
             options
                 .UseSqlServer(
                     BuildConnectionString(fabric),
-                    sqlServer => sqlServer.CommandTimeout(fabric.CommandTimeoutSeconds))
+                    sqlServer => sqlServer
+                        .CommandTimeout(fabric.CommandTimeoutSeconds)
+                        // Every query is a read, so repeating one after a transient fault is safe.
+                        .EnableRetryOnFailure(FabricMaxRetries, FabricMaxRetryDelay, errorNumbersToAdd: null))
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .AddInterceptors(provider.GetRequiredService<FabricAccessTokenInterceptor>());
         });

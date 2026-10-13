@@ -166,6 +166,8 @@ public class SqlTranslationTests
         {
             Assert.StartsWith("SELECT", sql.TrimStart());
             Assert.Contains("[gold].", sql);
+            // Fabric text columns are varchar, so no text may be sent as nvarchar.
+            Assert.DoesNotContain("N'", sql);
         });
     }
 

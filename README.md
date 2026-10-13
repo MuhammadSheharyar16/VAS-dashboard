@@ -170,6 +170,8 @@ Outside Development the API refuses to start while an Entra ID is still the plac
 - Every response under `/api` uses one envelope: `success`, `message`, `data`, `errors`, `traceId`.
 - Every endpoint needs a signed-in user unless it is marked anonymous. Controllers add `[RequirePermission(screen, action)]`.
 - What each role may do is defined in one file: `backend/src/Vas.Application/Features/Auth/Rules/RolePermissionMap.cs`.
+- When Fabric cannot be reached or queried, the API retries transient faults up to three times, then answers 503 in the envelope. Any other unexpected error is a 500.
+- A centre filter must belong to the selected country; a mismatch is a 400, not an empty report.
 - Each response returns an `X-Correlation-Id` header; the same value is the `traceId` in error bodies and in the logs.
 - Logs carry the user's Entra object ID. They never carry names, tokens or request bodies.
 - HTTPS is enforced by App Service ("HTTPS only"). The application adds HSTS and the security headers.

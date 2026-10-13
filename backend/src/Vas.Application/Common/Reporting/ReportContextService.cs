@@ -103,9 +103,18 @@ public sealed class ReportContextService(
         {
             var found = await db.Centres
                 .Where(centre => centre.CentreCode == centreCode)
-                .Select(centre => centre.CentreCode)
+                .Select(centre => centre.CountryCode)
                 .ToListAsync(cancellationToken);
             AddIfMissing(failures, found, nameof(ReportFilter.CentreCode), "Unknown centre.");
+
+            // A centre belongs to one country; the two together must agree or the report is silently empty.
+            if (filter.CountryCode is { } selectedCountry
+                && found.Count > 0
+                && !found.Contains(selectedCountry, StringComparer.OrdinalIgnoreCase))
+            {
+                failures.Add(new ValidationFailure(
+                    nameof(ReportFilter.CentreCode), "The centre does not belong to the selected country."));
+            }
         }
 
         if (filter.VisaTypeCode is { } visaTypeCode)

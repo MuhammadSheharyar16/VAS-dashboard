@@ -30,6 +30,11 @@ public sealed class ReportingDbContext(DbContextOptions<ReportingDbContext> opti
 
     public IQueryable<RefreshLog> RefreshLogs => Set<RefreshLog>();
 
+    // Fabric text columns are varchar. Sending filters as varchar keeps the comparison on the
+    // column's own type instead of converting every row to nvarchar.
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) =>
+        configurationBuilder.Properties<string>().AreUnicode(false);
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ReportingDbContext).Assembly);
 

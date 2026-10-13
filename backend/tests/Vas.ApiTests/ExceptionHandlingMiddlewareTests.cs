@@ -1,4 +1,6 @@
+using System.Data.Common;
 using System.Text.Json;
+using Azure.Identity;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +24,21 @@ public class ExceptionHandlingMiddlewareTests
         { new BusinessRuleException("Date range is too long."), 422 },
         { new InvalidOperationException("boom"), 500 },
         { new UnauthorizedAccessException("disk"), 500 },
+        { new FakeDbException("Login failed for gold_lakehouse."), 503 },
+        { new AuthenticationFailedException("No managed identity endpoint found."), 503 },
+        { new InvalidOperationException("Retry limit exceeded.", new FakeDbException("timeout")), 503 },
     };
+
+    private sealed class FakeDbException(string message) : DbException(message);
+
+    [Fact]
+    public async Task Data_source_failure_does_not_leak_its_message()
+    {
+        var (_, body) = await InvokeAsync(new FakeDbException("Login failed for gold_lakehouse."));
+
+        Assert.DoesNotContain("gold_lakehouse", body.Message);
+        Assert.Empty(body.Errors);
+    }
 
     [Theory]
     [MemberData(nameof(Mappings))]
