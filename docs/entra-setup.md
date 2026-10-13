@@ -107,7 +107,28 @@ The API reads them as settings. The React app has none built in: it gets them fr
 | `AzureAd__RequiredScope` | `Dashboard.Read` | Only if you named the scope differently |
 | `AzureAd__Instance` | `https://login.microsoftonline.com/` | Only for a national cloud |
 
-Where to put them:
+### Where to find the two client IDs
+
+Each ID is shown on its registration's **Overview** page, as soon as the registration exists.
+
+1. Open the [Azure portal](https://portal.azure.com) and go to **Microsoft Entra ID > App registrations > All applications**.
+2. Open the **API** registration (`AEGI VAS Dashboard API (<env>)`). On **Overview**, copy **Application (client) ID**. This is `AzureAd__ClientId`.
+3. Go back and open the **SPA** registration (`AEGI VAS Dashboard (<env>)`). Copy its **Application (client) ID**. This is `AzureAd__SpaClientId`.
+4. The **Directory (tenant) ID** on the same page is `AzureAd__TenantId`. It is the same on both registrations.
+
+| Setting | Comes from |
+| --- | --- |
+| `AzureAd__ClientId` | The **API** registration: the one that has the scope `Dashboard.Read` and the role `VasDashboard.Viewer` |
+| `AzureAd__SpaClientId` | The **SPA** registration: the one that has the redirect URIs |
+
+Two mistakes to avoid:
+
+- **Swapping the two.** With the SPA's ID in `AzureAd__ClientId`, sign-in still succeeds but the API answers every request with 401, because the token was issued for a different audience.
+- **Copying the Object ID.** The Overview page also shows an *Object ID*. The settings need the *Application (client) ID*.
+
+Each environment has its own registrations, so Dev, UAT and Production each have their own pair of IDs.
+
+### Where to put them
 
 | Where the app runs | Where the settings go |
 | --- | --- |
@@ -203,5 +224,5 @@ The executive's token is only ever used to call this API. It is never passed on 
 | Microsoft page: `AADSTS50194` not configured as multi-tenant | The tenant settings are unset but the registrations are single-tenant | Set `AzureAd__TenantId`, or make both registrations multitenant |
 | "Sign-in could not be started" in the app | `/config.json` could not be loaded or is incomplete, or the browser is showing an old copy of the page | Open `/config.json`; then reload with Ctrl+Shift+R |
 | "You do not have access" in the app | Signed in, but no role in the token | Assign the role; sign out and in |
-| API answers 401 with a token | Wrong audience (`AzureAd__ClientId` is not the API registration), or the token's tenant is not allowed | Compare the settings with section 5 |
+| API answers 401 with a token | Wrong audience (`AzureAd__ClientId` is not the API registration, or the two client IDs are swapped), or the token's tenant is not allowed | Compare the settings with section 5 |
 | The API stops at start-up | A client ID is still the placeholder, or a tenant ID is not valid | Read the first error in the log; it names the setting |
