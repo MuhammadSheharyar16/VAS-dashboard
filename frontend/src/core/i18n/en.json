@@ -2,11 +2,32 @@
   "app": {
     "name": "AEGI VAS",
     "product": "Executive Dashboard",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "home": "Home",
+    "allAreas": "All areas"
+  },
+  "home": {
+    "eyebrow": "AEGI VAS · Executive Dashboard",
+    "title": "Welcome, {name}",
+    "subtitle": "Choose a reporting area, then open it.",
+    "hint": "Point at an area or select it to bring it to the front, then select it to open it. The arrows, a swipe and the arrow keys also turn the carousel.",
+    "previous": "Previous area",
+    "next": "Next area",
+    "show": "Show {area}",
+    "open": "Open",
+    "comingSoon": "Coming soon",
+    "area": {
+      "EXECUTIVE_SUMMARY": "The headline view of VAS performance: volumes, outcomes, turnaround and revenue.",
+      "VAS": "Applications, outcomes, processing, revenue, visa types and centres in detail.",
+      "OPERATIONS": "Operational performance across centres and channels.",
+      "FINANCE": "Financial performance and revenue reporting.",
+      "ALFIT": "Alfit programme reporting.",
+      "CSAT": "Customer satisfaction across the visa journey.",
+      "default": "Reporting for this area."
+    }
   },
   "nav": {
     "label": "Reporting areas",
-    "comingSoon": "Soon",
     "EXECUTIVE_SUMMARY": "Executive Summary",
     "VAS": "VAS",
     "OPERATIONS": "Operations",
@@ -27,6 +48,9 @@
   },
   "filters": {
     "label": "Report filters",
+    "title": "Filters",
+    "activeCount": "{count} active",
+    "noneActive": "Showing everything",
     "period": "Period",
     "period7": "Last 7 days",
     "period30": "Last 30 days",

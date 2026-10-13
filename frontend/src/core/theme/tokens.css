@@ -70,6 +70,41 @@
   --globe-marker: #2f9fd0;
   --globe-halo: #4f5ee0;
 
+  /* Home backdrop: the Dubai skyline at first light, and the carousel's floor */
+  --sky-top: rgba(238, 241, 248, 0);
+  --sky-middle: rgba(186, 201, 246, 0.6);
+  --sky-horizon: rgba(252, 214, 190, 0.95);
+  --sky-sun: #fff7ea;
+  --sky-sun-halo: rgba(255, 196, 148, 0.5);
+  --skyline-far: #c5cdea;
+  --skyline-mid: #8f9bcd;
+  --skyline-near: #6c78b3;
+  --skyline-window: rgba(255, 255, 255, 0.62);
+  --skyline-edge: rgba(255, 255, 255, 0.7);
+  --skyline-beacon: #f25f5c;
+  --skyline-star: rgba(255, 255, 255, 0);
+  --skyline-water-top: #a9b7e6;
+  --skyline-water-deep: #dfe5f5;
+  --skyline-shimmer: rgba(255, 255, 255, 0.75);
+  --floor-glow: rgba(79, 94, 224, 0.34);
+
+  /* Glass: the home cards, from their solid top to their see-through foot */
+  --glass-strong: rgba(255, 255, 255, 0.8);
+  --glass-mid: rgba(255, 255, 255, 0.52);
+  --glass-faint: rgba(255, 255, 255, 0.2);
+  --glass-edge: rgba(255, 255, 255, 0.9);
+  --glass-edge-faint: rgba(255, 255, 255, 0.18);
+  --glass-tint: rgba(79, 94, 224, 0.2);
+  --glass-shadow: rgba(40, 52, 120, 0.3);
+  --picker-surface: rgba(255, 255, 255, 0.9);
+  --picker-border: rgba(69, 83, 214, 0.18);
+
+  /* Scrollbars: the brand colours, top to bottom */
+  --scrollbar-thumb: rgba(69, 83, 214, 0.6);
+  --scrollbar-gradient: linear-gradient(180deg, #4f5ee0 0%, #2f9fd0 60%, #19c2c9 100%);
+  --scrollbar-gradient-hover: linear-gradient(180deg, #3340b8 0%, #2389b6 60%, #12a5ab 100%);
+  --scrollbar-track: rgba(15, 20, 40, 0.05);
+
   /* Shape, depth, type, motion */
   --radius-sm: 10px;
   --radius-md: 14px;
@@ -86,8 +121,7 @@
   --space-7: 48px;
   --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --sidebar-width: 252px;
-  --sidebar-rail: 76px;
+  --content-width: 1480px;
 }
 
 :root[data-theme='dark'] {
@@ -148,4 +182,36 @@
   --globe-dot: #5b6594;
   --globe-marker: #38d4ea;
   --globe-halo: #8794ff;
+
+  --sky-top: rgba(7, 9, 18, 0);
+  --sky-middle: rgba(22, 28, 74, 0.75);
+  --sky-horizon: rgba(84, 58, 150, 0.9);
+  --sky-sun: #f3f5ff;
+  --sky-sun-halo: rgba(135, 148, 255, 0.3);
+  --skyline-far: #1d2449;
+  --skyline-mid: #131834;
+  --skyline-near: #0a0d1f;
+  --skyline-window: rgba(255, 214, 130, 0.9);
+  --skyline-edge: rgba(135, 148, 255, 0.7);
+  --skyline-beacon: #ff5a5a;
+  --skyline-star: rgba(255, 255, 255, 0.85);
+  --skyline-water-top: #151b40;
+  --skyline-water-deep: #070912;
+  --skyline-shimmer: rgba(56, 212, 234, 0.5);
+  --floor-glow: rgba(109, 124, 255, 0.46);
+
+  --glass-strong: rgba(34, 40, 72, 0.74);
+  --glass-mid: rgba(26, 31, 58, 0.5);
+  --glass-faint: rgba(20, 24, 46, 0.2);
+  --glass-edge: rgba(255, 255, 255, 0.34);
+  --glass-edge-faint: rgba(255, 255, 255, 0.05);
+  --glass-tint: rgba(109, 124, 255, 0.28);
+  --glass-shadow: rgba(0, 0, 0, 0.6);
+  --picker-surface: rgba(24, 28, 50, 0.92);
+  --picker-border: rgba(135, 148, 255, 0.26);
+
+  --scrollbar-thumb: rgba(135, 148, 255, 0.65);
+  --scrollbar-gradient: linear-gradient(180deg, #6d7cff 0%, #3aa8f0 60%, #22d3ee 100%);
+  --scrollbar-gradient-hover: linear-gradient(180deg, #8794ff 0%, #5bbcf7 60%, #56e0f5 100%);
+  --scrollbar-track: rgba(255, 255, 255, 0.04);
 }

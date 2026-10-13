@@ -36,7 +36,7 @@ The factory guides are **guidelines**. They decide structure and code quality on
 
 ## 2. Phase 1 functional requirements
 
-- **Navigation:** one dashboard with Executive Summary and VAS, plus the placeholder tabs.
+- **Navigation:** one dashboard with Executive Summary and VAS, plus the placeholder areas, all reached from the home screen's carousel (decision 30).
 - **KPI presentation:** clearly labelled KPI cards and supporting charts.
 - **Filters and comparisons:** date range, country, visa type and other agreed filters; period-on-period comparison where validated data supports it.
 - **Breakdowns:** visa, application, country, centre and journey views of the agreed KPIs.
@@ -306,6 +306,7 @@ Closed on 12 Oct 2026: 7 (no Figma; own designs), 8 (English only), 9 (Recharts)
 | 27 | Backend code lives in a `backend/` folder, not at the repository root |
 | 28 | 13 Oct 2026: the frontend has no mock mode and no fake user. Every run signs in with Entra ID and calls the API; mock data comes only from the API in Development (`DataSource=Mock`). Local development uses Dev app registrations in the LogicEra tenant, with the IDs supplied at run time from a git-ignored `.env` |
 | 29 | 13 Oct 2026: multi-tenant sign-in with no tenant ID configured. Any Entra organisation whose user signs in and holds `VasDashboard.Viewer` is accepted; `AzureAd__TenantId` and `AzureAd__AllowedTenantIds` are optional and limit sign-in to the tenants they name. Sign-in only: no per-tenant data separation. `/config.json` no longer carries a tenant ID |
+| 30 | 13 Oct 2026: the app opens on a home screen instead of the Executive Summary. It shows a Dubai skyline backdrop and the reporting areas on a 3D carousel; a click brings a card to the front and the front card opens its area. The skyline does not move with the pointer. The sidebar is removed: every page has a top bar with an "All areas" button back to the home screen. The skyline is a drawn illustration built into the app, not a photograph |
 
 **Made by Claude during implementation, 12 Oct 2026. Not yet confirmed by Sheharyar.**
 

@@ -6,12 +6,48 @@
   flex-direction: column;
   gap: var(--space-4);
   padding: var(--space-5);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--glass-edge-faint);
   border-radius: var(--radius-lg);
-  background: var(--color-surface-glass);
-  backdrop-filter: blur(18px) saturate(140%);
-  box-shadow: var(--shadow-card);
+  /* Glass that is clearest to read at the top and thins toward the foot. */
+  background: linear-gradient(175deg, var(--glass-strong) 0%, var(--glass-mid) 70%, var(--glass-faint) 130%);
+  backdrop-filter: blur(22px) saturate(160%);
+  box-shadow:
+    0 1px 0 var(--glass-edge) inset,
+    0 26px 60px -34px var(--glass-shadow);
   min-inline-size: 0;
+  transition:
+    translate 420ms var(--ease-out),
+    box-shadow 420ms var(--ease-out),
+    border-color 420ms var(--ease-out);
+}
+
+/* A line of the brand gradient along the top edge, drawn in when the panel is pointed at. */
+.panel::before {
+  content: '';
+  position: absolute;
+  inset-block-start: -1px;
+  inset-inline: var(--space-5);
+  block-size: 2px;
+  border-radius: 2px;
+  background: var(--gradient-brand);
+  opacity: 0;
+  scale: 0.4 1;
+  transition:
+    opacity 420ms var(--ease-out),
+    scale 520ms var(--ease-out);
+}
+
+.panel:hover {
+  border-color: var(--glass-edge);
+  box-shadow:
+    0 1px 0 var(--glass-edge) inset,
+    0 36px 70px -34px var(--glass-shadow);
+  translate: 0 -3px;
+}
+
+.panel:hover::before {
+  opacity: 1;
+  scale: 1 1;
 }
 
 .panel__header {
@@ -118,16 +154,149 @@
 /* ---- KPI card ------------------------------------------------------------------------ */
 
 .kpi {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   block-size: 100%;
   padding: var(--space-5);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--glass-edge-faint);
   border-radius: var(--radius-lg);
-  background: var(--color-surface-raised);
-  box-shadow: var(--shadow-raised);
+  /* Glass lit from the top-left corner, fading to almost clear at the opposite one. */
+  background: linear-gradient(150deg, var(--glass-strong) 0%, var(--glass-mid) 55%, var(--glass-faint) 115%);
+  backdrop-filter: blur(22px) saturate(160%);
+  box-shadow:
+    0 1px 0 var(--glass-edge) inset,
+    0 26px 54px -32px var(--glass-shadow);
   transform-style: preserve-3d;
+  transition:
+    box-shadow 420ms var(--ease-out),
+    border-color 420ms var(--ease-out);
+}
+
+/* The brand gradient runs round the edge of the card that is pointed at. */
+.kpi::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: var(--gradient-brand);
+  mask:
+    linear-gradient(black, black) content-box exclude,
+    linear-gradient(black, black);
+  opacity: 0;
+  transition: opacity 420ms var(--ease-out);
+  pointer-events: none;
+}
+
+.tilt:hover .kpi {
+  border-color: transparent;
+  box-shadow:
+    0 1px 0 var(--glass-edge) inset,
+    0 30px 60px -32px var(--glass-shadow),
+    0 36px 60px -38px var(--color-primary);
+}
+
+.tilt:hover .kpi::before {
+  opacity: 1;
+}
+
+.kpi__effects {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* The card's own icon, large and faint in the corner, as a watermark behind the figures. */
+.kpi__ghost {
+  position: absolute;
+  inset-block-end: -38px;
+  inset-inline-end: -34px;
+  color: var(--color-primary);
+  opacity: 0.05;
+  rotate: -12deg;
+  transition:
+    opacity 500ms var(--ease-out),
+    rotate 700ms var(--ease-out),
+    scale 700ms var(--ease-out);
+}
+
+.tilt:hover .kpi__ghost {
+  opacity: 0.12;
+  rotate: -4deg;
+  scale: 1.08;
+}
+
+.kpi__sheen {
+  position: absolute;
+  inset-block: -20%;
+  inset-inline-start: -60%;
+  inline-size: 45%;
+  background: linear-gradient(100deg, transparent, var(--color-highlight), transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+  /* As the report arrives a band of light crosses the cards, one after another. */
+  animation: kpi-sheen-arrive 1200ms var(--ease-out) backwards;
+  animation-delay: calc(520ms + var(--kpi-order, 0) * 110ms);
+}
+
+.kpi-grid > :nth-child(2) {
+  --kpi-order: 1;
+}
+
+.kpi-grid > :nth-child(3) {
+  --kpi-order: 2;
+}
+
+.kpi-grid > :nth-child(4) {
+  --kpi-order: 3;
+}
+
+.kpi-grid > :nth-child(5) {
+  --kpi-order: 4;
+}
+
+.kpi-grid > :nth-child(n + 6) {
+  --kpi-order: 5;
+}
+
+.tilt:hover .kpi__sheen {
+  animation: kpi-sheen 950ms var(--ease-out);
+}
+
+@keyframes kpi-sheen-arrive {
+  0% {
+    inset-inline-start: -60%;
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    inset-inline-start: 130%;
+    opacity: 0;
+  }
+}
+
+@keyframes kpi-sheen {
+  0% {
+    inset-inline-start: -60%;
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    inset-inline-start: 130%;
+    opacity: 0;
+  }
 }
 
 .kpi__top {
@@ -135,6 +304,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+  /* Cards with and without a status badge keep their labels on one line across the row. */
+  min-block-size: 40px;
   transform: translateZ(18px);
 }
 
@@ -147,6 +318,16 @@
   background: var(--gradient-brand);
   color: var(--color-on-primary);
   box-shadow: 0 10px 20px -10px var(--color-primary);
+  transition:
+    scale 420ms var(--ease-out),
+    rotate 420ms var(--ease-out),
+    box-shadow 420ms var(--ease-out);
+}
+
+.tilt:hover .kpi__icon {
+  box-shadow: 0 16px 26px -10px var(--color-primary);
+  rotate: -6deg;
+  scale: 1.1;
 }
 
 .kpi__label {
@@ -161,6 +342,7 @@
   font-weight: 680;
   line-height: 1.1;
   letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
   transform: translateZ(42px);
 }
 
@@ -326,46 +508,412 @@
 /* ---- Filter bar ----------------------------------------------------------------------- */
 
 .filters {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
-  gap: var(--space-3) var(--space-4);
-  padding: var(--space-4) var(--space-5);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-glass);
-  backdrop-filter: blur(18px) saturate(140%);
-  box-shadow: var(--shadow-card);
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--glass-edge-faint);
+  border-radius: 24px;
+  background: linear-gradient(175deg, var(--glass-strong) 0%, var(--glass-mid) 100%);
+  backdrop-filter: blur(22px) saturate(160%);
+  box-shadow:
+    0 1px 0 var(--glass-edge) inset,
+    0 22px 50px -34px var(--glass-shadow);
+  animation: rise-in 620ms var(--ease-out) 80ms backwards;
 }
 
-.field {
+/* A soft wash of the brand colour behind the title end of the bar. */
+.filters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(60% 160% at 0% 50%, var(--glass-tint), transparent 70%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.filters > * {
+  position: relative;
+}
+
+.filters__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-inline-end: var(--space-5);
+  border-inline-end: 1px solid var(--color-border);
+}
+
+.filters__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 14px;
+  background: var(--gradient-brand);
+  color: var(--color-on-primary);
+  box-shadow: 0 12px 22px -12px var(--color-primary);
+}
+
+.filters__heading {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-inline-size: 150px;
+  line-height: 1.25;
+}
+
+.filters__name {
+  font-size: 0.95rem;
+  font-weight: 680;
+  letter-spacing: -0.01em;
+}
+
+.filters__count {
+  color: var(--color-muted);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: color 300ms var(--ease-out);
+}
+
+.filters__count[data-active='true'] {
+  color: var(--color-primary);
+  font-weight: 620;
+}
+
+.filters__fields {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.filters__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-inline-start: auto;
+}
+
+/* ---- A filter as a pill: icon, label above value, the control filling the whole pill ---- */
+
+.field {
+  position: relative;
+  flex: 1 1 172px;
+  max-inline-size: 240px;
+  block-size: 54px;
+  border: 1px solid var(--color-border);
+  border-radius: 17px;
+  background: var(--glass-mid);
+  box-shadow: 0 1px 0 var(--glass-edge) inset;
+  transition:
+    border-color 260ms var(--ease-out),
+    background 260ms var(--ease-out),
+    box-shadow 260ms var(--ease-out),
+    translate 260ms var(--ease-out);
+}
+
+.field:hover {
+  border-color: var(--color-border-strong);
+  background: var(--glass-strong);
+  box-shadow:
+    0 1px 0 var(--glass-edge) inset,
+    0 14px 24px -16px var(--glass-shadow);
+  translate: 0 -2px;
+}
+
+.field:focus-within {
+  border-color: var(--color-primary);
+  box-shadow:
+    0 1px 0 var(--glass-edge) inset,
+    0 0 0 4px var(--color-primary-soft);
+}
+
+/* A filter that narrows the report wears the brand gradient round its edge. */
+.field::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: var(--gradient-brand);
+  mask:
+    linear-gradient(black, black) content-box exclude,
+    linear-gradient(black, black);
+  opacity: 0;
+  transition: opacity 320ms var(--ease-out);
+  pointer-events: none;
+}
+
+.field[data-active='true'] {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--color-primary-soft), var(--glass-strong) 70%);
+}
+
+.field[data-active='true']::before {
+  opacity: 1;
+}
+
+.field__icon {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 10px;
+  display: grid;
+  place-items: center;
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 11px;
+  background: var(--color-surface-sunken);
+  color: var(--color-text-secondary);
+  translate: 0 -50%;
+  transition:
+    background 320ms var(--ease-out),
+    color 320ms var(--ease-out),
+    rotate 320ms var(--ease-out),
+    scale 320ms var(--ease-out);
+  pointer-events: none;
+}
+
+.field:hover .field__icon {
+  rotate: -8deg;
+  scale: 1.08;
+}
+
+.field[data-active='true'] .field__icon {
+  background: var(--gradient-brand);
+  box-shadow: 0 10px 18px -10px var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 .field__label {
+  position: absolute;
+  inset-block-start: 9px;
+  inset-inline-start: 52px;
   color: var(--color-muted);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 0.66rem;
+  font-weight: 640;
+  letter-spacing: 0.08em;
+  line-height: 1;
   text-transform: uppercase;
+  pointer-events: none;
 }
 
 .field__control {
-  block-size: 38px;
-  padding-inline: 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  /* The value sits under the label and clear of the icon and the chevron. */
+  padding: 20px 34px 4px 52px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
   color: var(--color-text);
-  font-size: 0.88rem;
-  transition: border-color 160ms var(--ease-out);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  appearance: none;
+  cursor: pointer;
 }
 
-.field__control:hover {
-  border-color: var(--color-border-strong);
+.field__control:focus-visible {
+  outline: none;
+}
+
+.field__control[type='date'] {
+  padding-inline-end: 12px;
+}
+
+.field__control[aria-invalid='true'] {
+  color: var(--status-critical);
+}
+
+.field__chevron {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: 12px;
+  color: var(--color-muted);
+  translate: 0 -50%;
+  transition:
+    rotate 320ms var(--ease-out),
+    color 320ms var(--ease-out);
+  pointer-events: none;
+}
+
+.field:hover .field__chevron,
+.field:focus-within .field__chevron {
+  color: var(--color-primary);
+}
+
+.field:focus-within .field__chevron {
+  rotate: 180deg;
+}
+
+/*
+  The list a filter opens. Browsers that let a select's own list be styled get this one; the
+  others keep the list the operating system draws, and the filter works the same either way.
+*/
+@supports (appearance: base-select) {
+  select.field__control,
+  select.field__control::picker(select) {
+    appearance: base-select;
+  }
+
+  select.field__control {
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    line-height: 1.6;
+    white-space: nowrap;
+  }
+
+  /* The field draws its own chevron. */
+  select.field__control::picker-icon {
+    display: none;
+  }
+
+  .field:has(select.field__control:open) {
+    border-color: var(--color-primary);
+    box-shadow:
+      0 1px 0 var(--glass-edge) inset,
+      0 0 0 4px var(--color-primary-soft);
+  }
+
+  .field:has(select.field__control:open) .field__chevron {
+    color: var(--color-primary);
+    rotate: 180deg;
+  }
+
+  .field:focus-within:not(:has(select.field__control:open)) .field__chevron {
+    rotate: 0deg;
+  }
+
+  select.field__control::picker(select) {
+    box-sizing: border-box;
+    min-inline-size: anchor-size(width);
+    max-block-size: min(360px, 60vh);
+    margin-block: 8px;
+    padding: 6px;
+    overflow-y: auto;
+    border: 1px solid var(--picker-border);
+    border-radius: 18px;
+    background: var(--picker-surface);
+    backdrop-filter: blur(26px) saturate(170%);
+    box-shadow:
+      0 1px 0 var(--glass-edge) inset,
+      0 34px 70px -28px var(--glass-shadow),
+      0 12px 26px -18px var(--glass-shadow);
+    color: var(--color-text);
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+    scrollbar-width: thin;
+    /* The list grows out of the field it belongs to. */
+    opacity: 0;
+    scale: 0.96;
+    translate: 0 -10px;
+    transform-origin: 50% 0;
+    transition:
+      opacity 220ms var(--ease-out),
+      scale 260ms var(--ease-out),
+      translate 260ms var(--ease-out),
+      overlay 260ms allow-discrete,
+      display 260ms allow-discrete;
+  }
+
+  select.field__control:open::picker(select) {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    select.field__control:open::picker(select) {
+      opacity: 0;
+      scale: 0.96;
+      translate: 0 -10px;
+    }
+  }
+
+  /*
+    The list's own scrollbar keeps its arrow buttons on Windows however it is coloured. Where the
+    browser can tie an animation to scrolling, that scrollbar is hidden and a bar in the brand
+    gradient is drawn in its place: the animation slides it down the edge as the list scrolls.
+    A list short enough not to scroll has no scroll to follow, so its bar keeps the size of nothing.
+  */
+  @supports (animation-timeline: scroll()) {
+    select.field__control::picker(select) {
+      padding-inline-end: 15px;
+      background:
+        var(--scrollbar-gradient) no-repeat right 5px top 10px / 0 0,
+        var(--picker-surface);
+      scrollbar-width: none;
+      animation: picker-thumb linear both;
+      animation-timeline: scroll(self);
+    }
+  }
+
+  @keyframes picker-thumb {
+    from {
+      background-position:
+        right 5px top 10px,
+        0 0;
+      background-size:
+        5px 32%,
+        auto;
+    }
+
+    to {
+      background-position:
+        right 5px bottom 10px,
+        0 0;
+      background-size:
+        5px 32%,
+        auto;
+    }
+  }
+
+  select.field__control option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-block-size: 38px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    color: var(--color-text);
+    font-size: 0.88rem;
+    font-weight: 540;
+    cursor: pointer;
+    transition:
+      background 160ms var(--ease-out),
+      padding 200ms var(--ease-out);
+  }
+
+  select.field__control option + option {
+    margin-block-start: 2px;
+  }
+
+  select.field__control option:hover,
+  select.field__control option:focus-visible {
+    padding-inline-start: 16px;
+    background: var(--color-primary-soft);
+    outline: none;
+  }
+
+  /* The chosen option carries the brand gradient and the tick, at the end of its row. */
+  select.field__control option:checked {
+    background: var(--gradient-brand);
+    box-shadow: 0 12px 22px -14px var(--color-primary);
+    color: var(--color-on-primary);
+    font-weight: 640;
+  }
+
+  select.field__control option::checkmark {
+    order: 1;
+    margin-inline-start: auto;
+    font-size: 0.8rem;
+  }
 }
 
 .field__error {
@@ -375,14 +923,47 @@
   font-weight: 550;
 }
 
+/* ---- The comparison switch, as a pill of its own --------------------------------------- */
+
 .switch {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  block-size: 38px;
+  block-size: 54px;
+  padding-inline: 14px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 17px;
+  background: var(--glass-mid);
+  box-shadow: 0 1px 0 var(--glass-edge) inset;
   color: var(--color-text-secondary);
   font-size: 0.86rem;
+  font-weight: 560;
   cursor: pointer;
+  transition:
+    border-color 260ms var(--ease-out),
+    background 260ms var(--ease-out),
+    color 260ms var(--ease-out),
+    translate 260ms var(--ease-out);
+}
+
+.switch:hover {
+  border-color: var(--color-border-strong);
+  background: var(--glass-strong);
+  translate: 0 -2px;
+}
+
+.switch[data-active='true'] {
+  color: var(--color-text);
+}
+
+.switch__icon {
+  flex: none;
+  transition: color 260ms var(--ease-out);
+}
+
+.switch[data-active='true'] .switch__icon {
+  color: var(--color-primary);
 }
 
 .switch input {
@@ -392,11 +973,14 @@
 
 .switch__track {
   position: relative;
-  inline-size: 38px;
-  block-size: 22px;
+  flex: none;
+  inline-size: 42px;
+  block-size: 24px;
   border-radius: var(--radius-pill);
   background: var(--color-border-strong);
-  transition: background 200ms var(--ease-out);
+  transition:
+    background 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out);
 }
 
 .switch__track::after {
@@ -404,19 +988,21 @@
   position: absolute;
   inset-block-start: 3px;
   inset-inline-start: 3px;
-  inline-size: 16px;
-  block-size: 16px;
+  inline-size: 18px;
+  block-size: 18px;
   border-radius: 50%;
-  background: var(--color-surface);
-  transition: transform 200ms var(--ease-out);
+  background: var(--color-on-primary);
+  box-shadow: 0 2px 6px var(--glass-shadow);
+  transition: transform 320ms var(--ease-out);
 }
 
 .switch input:checked + .switch__track {
-  background: var(--color-primary);
+  background: var(--gradient-brand);
+  box-shadow: 0 8px 16px -8px var(--color-primary);
 }
 
 .switch input:checked + .switch__track::after {
-  transform: translateX(16px);
+  transform: translateX(18px);
 }
 
 .switch input:focus-visible + .switch__track {
@@ -424,8 +1010,59 @@
   outline-offset: 2px;
 }
 
-.filters__spacer {
-  flex: 1;
+.filters__reset {
+  block-size: 54px;
+  padding-inline: 16px;
+  border-radius: 17px;
+  background: var(--glass-mid);
+  box-shadow: 0 1px 0 var(--glass-edge) inset;
+}
+
+.filters__reset svg {
+  transition: rotate 520ms var(--ease-out);
+}
+
+.filters__reset:hover:not(:disabled) svg {
+  rotate: -180deg;
+}
+
+.filters__reset:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.filters__reset:disabled:hover {
+  border-color: var(--color-border);
+  background: var(--glass-mid);
+}
+
+/* Narrower windows: the title and the actions share the first row, the filters take the second. */
+@media (max-width: 1640px) {
+  .filters__title {
+    padding-inline-end: 0;
+    border-inline-end: 0;
+  }
+
+  .filters__fields {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .field {
+    max-inline-size: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .filters__actions {
+    flex-basis: 100%;
+    margin-inline-start: 0;
+  }
+
+  .switch {
+    flex: 1;
+    justify-content: space-between;
+  }
 }
 
 /* ---- Segmented control ---------------------------------------------------------------- */
@@ -761,12 +1398,25 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: var(--space-3) var(--space-5);
+  animation: rise-in 620ms var(--ease-out) backwards;
 }
 
 .page-header__title {
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  inline-size: fit-content;
+  background: linear-gradient(120deg, var(--color-text) 35%, var(--color-primary) 80%, var(--color-accent) 100%);
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.2rem);
+  font-weight: 720;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
 }
 
 .page-header__subtitle {
@@ -779,9 +1429,27 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2) var(--space-3);
-  color: var(--color-muted);
-  font-size: 0.82rem;
+  gap: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+}
+
+/* Each fact about the data sits in its own chip, so the row reads as one line of equal parts. */
+.page-header__meta > span:not(.badge) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(12px) saturate(140%);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.page-header__meta > .badge {
+  padding-block: 5px;
 }
 
 /* ---- Globe ---------------------------------------------------------------------------- */

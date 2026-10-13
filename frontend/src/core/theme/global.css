@@ -74,6 +74,44 @@ a {
   transform: none;
 }
 
+/* ---- Scrollbars in the brand colours, in both themes ----------------------------------- */
+
+::-webkit-scrollbar {
+  inline-size: 12px;
+  block-size: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* The see-through border keeps the thumb slim and leaves a margin of track round it. */
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--scrollbar-gradient);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active {
+  border-width: 2px;
+  background: var(--scrollbar-gradient-hover);
+  background-clip: padding-box;
+}
+
+/* Browsers without those parts take a single colour for the thumb. */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    scrollbar-width: thin;
+  }
+}
+
 /* ---- Ambient background: slow drifting lights behind a faint grid -------------------- */
 
 .aurora {

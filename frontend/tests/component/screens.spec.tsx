@@ -196,19 +196,83 @@ describe('VasScreen', () => {
 });
 
 describe('AppRouter', () => {
-  it('builds the menu from the backend and marks the areas that are coming soon', async () => {
-    renderApp(<AppRouter />, { route: '/executive-summary' });
+  it('opens on the home screen, with the areas from the backend and the planned ones marked', async () => {
+    renderApp(<AppRouter />);
 
-    const nav = await screen.findByRole('navigation', { name: t('nav.label') });
-    expect(within(nav).getAllByRole('link').map((link) => link.textContent)).toEqual([
+    expect(await screen.findByRole('heading', { level: 1, name: t('home.title', { name: 'Test' }) })).toBeInTheDocument();
+
+    const links = within(screen.getByRole('navigation', { name: t('nav.label') })).getAllByRole('link');
+    expect(links.map((link) => link.querySelector('.area-card__title')?.textContent)).toEqual([
       'Executive Summary',
       'VAS',
-      `Operations${t('nav.comingSoon')}`,
-      `Finance${t('nav.comingSoon')}`,
-      `Alfit${t('nav.comingSoon')}`,
-      `CSAT${t('nav.comingSoon')}`,
+      'Operations',
+      'Finance',
+      'Alfit',
+      'CSAT',
+    ]);
+    expect(links.map((link) => within(link).queryByText(t('home.comingSoon')) !== null)).toEqual([
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
     ]);
     expect(screen.getByText('Test Executive')).toBeInTheDocument();
+  });
+
+  it('carries the report filters from a report to the home screen and on to the next report', async () => {
+    const { unmount } = renderApp(<AppRouter />, { route: '/executive-summary?country=AE&other=1' });
+    expect(await screen.findByRole('link', { name: t('app.allAreas') })).toHaveAttribute('href', '/?country=AE');
+    unmount();
+
+    renderApp(<AppRouter />, { route: '/?country=AE&other=1' });
+    expect(await screen.findByRole('link', { name: /^VAS/ })).toHaveAttribute('href', '/vas?country=AE');
+    // A planned area has no report to filter.
+    expect(screen.getByRole('link', { name: /^Finance/ })).toHaveAttribute('href', '/finance');
+    expect(screen.queryByRole('link', { name: t('app.allAreas') })).not.toBeInTheDocument();
+  });
+
+  it('brings a card behind to the front on the first click and opens it on the next', async () => {
+    const user = userEvent.setup();
+    renderApp(<AppRouter />);
+
+    const front = () => screen.getAllByRole('listitem').find((item) => item.dataset.active === 'true')?.textContent;
+
+    await user.click(await screen.findByRole('link', { name: /^Finance/ }));
+    expect(front()).toContain('Finance');
+    expect(screen.getByRole('heading', { level: 1, name: t('home.title', { name: 'Test' }) })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('link', { name: /^Finance/ }));
+    expect(await screen.findByRole('heading', { name: t('comingSoon.title', { area: 'Finance' }) })).toBeInTheDocument();
+  });
+
+  it('turns the carousel with the arrows, the arrow keys and the position dots', async () => {
+    const user = userEvent.setup();
+    renderApp(<AppRouter />);
+
+    const front = () => screen.getAllByRole('listitem').find((item) => item.dataset.active === 'true')?.textContent;
+    const dot = (area: string) => screen.getByRole('button', { name: t('home.show', { area }) });
+
+    await screen.findByRole('group', { name: t('nav.label') });
+    expect(front()).toContain('Executive Summary');
+    expect(dot('Executive Summary')).toHaveAttribute('aria-current', 'true');
+
+    await user.click(screen.getByRole('button', { name: t('home.next') }));
+    expect(front()).toContain('Applications, outcomes');
+    expect(dot('VAS')).toHaveAttribute('aria-current', 'true');
+
+    await user.keyboard('{ArrowRight}');
+    expect(front()).toContain('Operations');
+
+    await user.click(screen.getByRole('button', { name: t('home.previous') }));
+    await user.click(screen.getByRole('button', { name: t('home.previous') }));
+    await user.click(screen.getByRole('button', { name: t('home.previous') }));
+    // The ring has no end: going back from the first area reaches the last.
+    expect(front()).toContain('CSAT');
+
+    await user.click(dot('Finance'));
+    expect(front()).toContain('Finance');
   });
 
   it('shows the coming-soon page for a planned area and not-found for an unknown path', async () => {

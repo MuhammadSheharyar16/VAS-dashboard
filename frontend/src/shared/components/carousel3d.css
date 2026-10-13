@@ -1,0 +1,227 @@
+/* ---- Carousel3D: items on a ring, one at the front ------------------------------------ */
+
+.carousel3d {
+  --carousel-item-width: 300px;
+  --carousel-item-height: 380px;
+  --carousel-scale: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  inline-size: 100%;
+}
+
+.carousel3d__stage {
+  position: relative;
+  inline-size: 100%;
+  /* Room for the items, the lift of the front one and its reflection on the floor. */
+  block-size: calc((var(--carousel-item-height) + 56px) * var(--carousel-scale));
+  perspective: 1500px;
+  perspective-origin: 50% 38%;
+}
+
+.carousel3d__ring {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  inline-size: 0;
+  block-size: var(--carousel-item-height);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform-style: preserve-3d;
+  /*
+    The ring follows the pointer from side to side: it swings round and slides the other way, so
+    the items on the side the pointer moves to come forward to meet it.
+  */
+  transform: scale(var(--carousel-scale)) translate3d(calc(var(--parallax-x, 0) * -110px), 0, 0)
+    rotateX(calc(var(--parallax-y, 0) * -3deg)) rotateY(calc(var(--parallax-x, 0) * -8deg));
+  transform-origin: 50% 0;
+  transition: transform 900ms var(--ease-out);
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.carousel3d__slot {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: calc(var(--carousel-item-width) / -2);
+  inline-size: var(--carousel-item-width);
+  block-size: var(--carousel-item-height);
+  transform-style: preserve-3d;
+  transition:
+    transform 760ms var(--ease-out),
+    opacity 520ms var(--ease-out);
+  will-change: transform;
+}
+
+/*
+  A slot, its wrappers and whatever an item wraps itself in all lie in the same plane as the item.
+  Once the ring leans in 3D the browser can no longer tell which of them is in front, and one of
+  them would take the click meant for the item. So inside a slot only links and buttons can be
+  pointed at; movement over them still reaches the handlers on the layers around them.
+*/
+.carousel3d__slot,
+.carousel3d__slot * {
+  pointer-events: none;
+}
+
+.carousel3d__slot :is(a, button) {
+  pointer-events: auto;
+}
+
+.carousel3d__slot[data-hidden='true'] :is(a, button) {
+  pointer-events: none;
+}
+
+/* The items arrive from the front outwards. */
+.carousel3d__enter {
+  block-size: 100%;
+  animation: carousel3d-enter 900ms var(--ease-out) backwards;
+  animation-delay: calc(var(--carousel-order, 0) * 90ms);
+}
+
+/* No filter or mask on the wrappers: a see-through item has to show the page behind it. */
+.carousel3d__float {
+  block-size: 100%;
+}
+
+.carousel3d__slot[data-active='true'] .carousel3d__float {
+  animation: carousel3d-float 7s ease-in-out infinite;
+}
+
+/* A pool of light on the floor under the ring. */
+.carousel3d__floor {
+  position: absolute;
+  inset-block-end: calc(-6px * var(--carousel-scale));
+  inset-inline-start: 50%;
+  inline-size: min(980px, 96%);
+  block-size: 190px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--floor-glow), transparent 100%);
+  filter: blur(18px);
+  transform: translateX(-50%) rotateX(74deg) scale(var(--carousel-scale));
+  animation: carousel3d-breathe 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.carousel3d__controls {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.carousel3d__arrow {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  transition:
+    transform 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    background 200ms var(--ease-out);
+}
+
+.carousel3d__arrow:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-primary-soft);
+  transform: scale(1.08);
+}
+
+.carousel3d__arrow:active {
+  transform: scale(0.94);
+}
+
+.carousel3d__dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+
+.carousel3d__dot {
+  inline-size: 8px;
+  block-size: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-border-strong);
+  transition:
+    inline-size 320ms var(--ease-out),
+    background 320ms var(--ease-out);
+}
+
+.carousel3d__dot:hover {
+  background: var(--color-muted);
+}
+
+.carousel3d__dot[aria-current='true'] {
+  inline-size: 26px;
+  background: var(--gradient-brand);
+}
+
+@keyframes carousel3d-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 56px, 0) scale(0.94);
+  }
+}
+
+@keyframes carousel3d-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -9px, 0);
+  }
+}
+
+@keyframes carousel3d-breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1180px) {
+  .carousel3d {
+    --carousel-scale: 0.86;
+  }
+}
+
+@media (max-width: 860px) {
+  .carousel3d {
+    --carousel-scale: 0.7;
+  }
+}
+
+@media (max-width: 560px) {
+  .carousel3d {
+    --carousel-scale: 0.56;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 861px) {
+  .carousel3d {
+    --carousel-scale: 0.8;
+  }
+}

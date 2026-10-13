@@ -5,6 +5,7 @@ import { canView, type MenuItem, type Permission } from '@/features/session/api/
 import { useSession } from '@/features/session/useSession';
 import { ErrorState, ReportSkeleton } from '@/shared/components/states';
 import { AppShell } from './AppShell';
+import HomePage from './home/page';
 import { ComingSoonPage, NotFoundPage, StartingPage, UnauthorizedPage } from './pages';
 
 // Each report is its own download, fetched when its page is first opened.
@@ -50,8 +51,8 @@ export function AppRouter() {
   return (
     <Routes>
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
-      <Route element={<AppShell menu={menu} />}>
-        <Route index element={<Navigate to="/executive-summary" replace />} />
+      <Route element={<AppShell />}>
+        <Route index element={<HomePage menu={menu} />} />
         <Route
           path="/executive-summary"
           element={

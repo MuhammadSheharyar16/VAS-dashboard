@@ -30,6 +30,7 @@ Locked: 12 October 2026. Source of each answer: the Q&A recorded in `project-spe
 | --- | --- |
 | Figma | None exists. Claude designs the screens; Sheharyar approves them (explicit instruction, overrides the "never invent UI" rule) |
 | Design direction | Elegant, with depth and motion: glass surfaces, pointer-tilt 3D cards, an animated 3D globe, animated numbers and transitions (explicit instruction, 12 Oct 2026) |
+| Home and navigation | The app opens on a home screen: a drawn Dubai skyline behind a 3D carousel of the reporting areas. A click brings a card to the front, and the front card opens its area. There is no sidebar; every page has a top bar whose "All areas" button returns to the home screen, and the report filters travel with the user (specs decision 30, 13 Oct 2026) |
 | Requirements | `project-specs.md`; KPI definitions in `docs/kpi-mapping.md` |
 | Icons | `lucide-react` (agent-default) |
 
@@ -43,7 +44,7 @@ Locked: 12 October 2026. Source of each answer: the Q&A recorded in `project-spe
 | Font | Inter Variable, bundled with the app (`@fontsource-variable/inter`); no request to a font host |
 | Languages | English only. Every visible string is in `src/core/i18n/en.json` |
 | RTL | Not in Phase 1. Logical CSS properties are used so it can be added |
-| Motion | Decorative animation is on. `prefers-reduced-motion` switches off the tilt, the globe rotation, the count-up and the transitions |
+| Motion | Decorative animation is on. `prefers-reduced-motion` switches off the tilt, the globe rotation, the count-up, the transitions, and the home screen's parallax, floating card and skyline lights; the carousel still turns, at once |
 
 ## E. Runtime and quality
 

@@ -72,7 +72,13 @@ export function KpiCard({ kpi }: { kpi: KpiCardModel }) {
 
   return (
     <TiltCard>
-      <article className="kpi" aria-label={label}>
+      <article className="kpi" data-status={kpi.status} aria-label={label}>
+        {/* The effects are clipped in their own layer; clipping the card would flatten its depth. */}
+        <span className="kpi__effects" aria-hidden="true">
+          <Icon className="kpi__ghost" size={132} strokeWidth={1.2} />
+          <span className="kpi__sheen" />
+        </span>
+
         <div className="kpi__top">
           <span className="kpi__icon" aria-hidden="true">
             <Icon size={19} />

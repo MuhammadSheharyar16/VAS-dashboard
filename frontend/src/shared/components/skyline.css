@@ -1,0 +1,178 @@
+/* ---- DubaiSkyline: a drawn backdrop that stands still behind the page ------------------ */
+
+.skyline {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.skyline__art {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: -2%;
+  inline-size: 104%;
+  block-size: min(78vh, 760px);
+  animation: skyline-rise 1400ms var(--ease-out) both;
+}
+
+/* Keeps the headline readable where the sky meets the page. */
+.skyline__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 34%);
+  opacity: 0.55;
+}
+
+.skyline__stop-top {
+  stop-color: var(--sky-top);
+}
+
+.skyline__stop-middle {
+  stop-color: var(--sky-middle);
+}
+
+.skyline__stop-horizon {
+  stop-color: var(--sky-horizon);
+}
+
+.skyline__stop-sun {
+  stop-color: var(--sky-sun);
+}
+
+.skyline__stop-sun-halo {
+  stop-color: var(--sky-sun-halo);
+}
+
+.skyline__stop-clear {
+  stop-color: var(--sky-sun-halo);
+  stop-opacity: 0;
+}
+
+.skyline__stop-water-top {
+  stop-color: var(--skyline-water-top);
+}
+
+.skyline__stop-water-deep {
+  stop-color: var(--skyline-water-deep);
+}
+
+.skyline__disc {
+  fill: var(--sky-sun);
+}
+
+.skyline__far {
+  fill: var(--skyline-far);
+}
+
+.skyline__mid {
+  fill: var(--skyline-mid);
+}
+
+.skyline__near {
+  fill: var(--skyline-near);
+}
+
+.skyline__windows {
+  fill: var(--skyline-window);
+}
+
+.skyline__stop-haze {
+  stop-color: var(--sky-horizon);
+}
+
+.skyline__stop-haze-clear {
+  stop-color: var(--sky-horizon);
+  stop-opacity: 0;
+}
+
+.skyline__stars {
+  fill: var(--skyline-star);
+}
+
+.skyline__edge {
+  fill: none;
+  stroke: var(--skyline-edge);
+  stroke-width: 1.2;
+}
+
+.skyline__beacon {
+  fill: var(--skyline-beacon);
+  animation: skyline-beacon 2.4s ease-in-out infinite;
+}
+
+.skyline__mirror {
+  opacity: 0.55;
+}
+
+.skyline__shimmer {
+  fill: none;
+  stroke: var(--skyline-shimmer);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 46 34;
+  animation: skyline-shimmer 9s linear infinite;
+}
+
+.skyline__shore {
+  fill: none;
+  stroke: var(--skyline-edge);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+
+.skyline__twinkle {
+  animation: skyline-twinkle 5s ease-in-out infinite;
+}
+
+.skyline__twinkle--1 {
+  animation-duration: 6.5s;
+  animation-delay: -2s;
+}
+
+.skyline__twinkle--2 {
+  animation-duration: 8s;
+  animation-delay: -4.5s;
+}
+
+@keyframes skyline-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 36px, 0);
+  }
+}
+
+@keyframes skyline-twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes skyline-beacon {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.15;
+  }
+}
+
+@keyframes skyline-shimmer {
+  to {
+    stroke-dashoffset: -160;
+  }
+}
+
+@media print {
+  .skyline {
+    display: none;
+  }
+}

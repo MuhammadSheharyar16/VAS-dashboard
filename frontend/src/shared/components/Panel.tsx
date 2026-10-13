@@ -3,6 +3,17 @@ import { motion } from 'motion/react';
 import { useId, useState, type ReactNode } from 'react';
 import { t } from '@/core/i18n';
 
+/**
+ * How a block arrives: it fades in while it drifts up and grows to full size, in one unbroken
+ * movement that slows to a stop. There is no swing and no bounce, so nothing settles twice.
+ */
+const ARRIVE = {
+  hidden: { opacity: 0, y: 26, scale: 0.955 },
+  shown: { opacity: 1, y: 0, scale: 1 },
+};
+
+const ARRIVE_EASE = { duration: 0.8, ease: [0.16, 1, 0.3, 1] } as const;
+
 interface PanelProps {
   title: string;
   subtitle?: string;
@@ -19,8 +30,8 @@ export function Panel({ title, subtitle, actions, children, className = '' }: Pa
     <motion.section
       className={`panel ${className}`}
       aria-labelledby={headingId}
-      variants={{ hidden: { opacity: 0, y: 18 }, shown: { opacity: 1, y: 0 } }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      variants={ARRIVE}
+      transition={ARRIVE_EASE}
     >
       <header className="panel__header">
         <div>
@@ -73,7 +84,7 @@ export function Stagger({ children, className = '' }: { children: ReactNode; cla
       className={className}
       initial="hidden"
       animate="shown"
-      variants={{ shown: { transition: { staggerChildren: 0.07 } } }}
+      variants={{ shown: { transition: { staggerChildren: 0.055 } } }}
     >
       {children}
     </motion.div>
@@ -84,8 +95,8 @@ export function StaggerItem({ children, className = '' }: { children: ReactNode;
   return (
     <motion.div
       className={className}
-      variants={{ hidden: { opacity: 0, y: 18 }, shown: { opacity: 1, y: 0 } }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      variants={ARRIVE}
+      transition={ARRIVE_EASE}
     >
       {children}
     </motion.div>

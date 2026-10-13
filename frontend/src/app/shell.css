@@ -1,31 +1,46 @@
 .shell {
   position: relative;
   z-index: 1;
-  display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   min-block-size: 100vh;
 }
 
-/* ---- Sidebar -------------------------------------------------------------------------- */
+/* ---- Top bar -------------------------------------------------------------------------- */
 
-.sidebar {
+.topbar {
   position: sticky;
   inset-block-start: 0;
+  z-index: 20;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  block-size: 100vh;
-  padding: var(--space-5) var(--space-4);
-  border-inline-end: 1px solid var(--color-border);
+  align-items: center;
+  gap: var(--space-4);
+  /* The bar lines up with the page below it, however wide the window is. */
+  padding: var(--space-3) max(var(--space-6), calc((100% - var(--content-width)) / 2));
+  border-block-end: 1px solid var(--color-border);
   background: var(--color-surface-glass);
   backdrop-filter: blur(22px) saturate(140%);
+}
+
+/* On the home screen the bar floats over the backdrop. */
+.shell--home .topbar {
+  border-block-end-color: transparent;
+  background: transparent;
+  backdrop-filter: none;
+}
+
+.topbar__end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-inline-start: auto;
 }
 
 .brand {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding-inline: var(--space-2);
+  border-radius: var(--radius-md);
 }
 
 .brand__mark {
@@ -38,6 +53,16 @@
   background: var(--gradient-brand);
   color: var(--color-on-primary);
   box-shadow: 0 12px 24px -12px var(--color-primary);
+  transition: transform 300ms var(--ease-out);
+}
+
+.brand:hover .brand__mark {
+  transform: rotate(-6deg) scale(1.05);
+}
+
+.brand__text {
+  display: flex;
+  flex-direction: column;
 }
 
 .brand__name {
@@ -52,107 +77,32 @@
   font-size: 0.74rem;
 }
 
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.nav__link {
-  position: relative;
+.account {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  color: var(--color-text-secondary);
-  font-size: 0.9rem;
-  font-weight: 550;
-  transition: color 160ms var(--ease-out);
-}
-
-.nav__link:hover {
-  color: var(--color-text);
-}
-
-.nav__link[aria-current='page'] {
-  color: var(--color-text);
-}
-
-.nav__active {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  padding: 5px 6px 5px 5px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-primary-soft);
-}
-
-.nav__active::before {
-  content: '';
-  position: absolute;
-  inset-block: 9px;
-  inset-inline-start: -1px;
-  inline-size: 3px;
-  border-radius: 3px;
-  background: var(--gradient-brand);
-}
-
-.nav__icon,
-.nav__text,
-.nav__tag {
-  position: relative;
-  z-index: 1;
-}
-
-.nav__icon {
-  flex: none;
-}
-
-.nav__text {
-  flex: 1;
-}
-
-.nav__tag {
-  padding: 2px 8px;
   border-radius: var(--radius-pill);
-  background: var(--color-surface-sunken);
-  color: var(--color-muted);
-  font-size: 0.68rem;
-  font-weight: 620;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.sidebar__footer {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-block-start: auto;
-  padding: var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-sunken);
+  background: var(--color-surface-glass);
+  backdrop-filter: blur(16px) saturate(140%);
 }
 
 .avatar {
   display: grid;
   flex: none;
   place-items: center;
-  inline-size: 36px;
-  block-size: 36px;
+  inline-size: 34px;
+  block-size: 34px;
   border-radius: 50%;
   background: var(--gradient-brand);
   color: var(--color-on-primary);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 680;
 }
 
 .user {
-  flex: 1;
+  max-inline-size: 220px;
   min-inline-size: 0;
 }
 
@@ -164,39 +114,35 @@
 }
 
 .user__name {
-  font-size: 0.86rem;
+  font-size: 0.84rem;
   font-weight: 620;
+  line-height: 1.25;
 }
 
 .user__detail {
   color: var(--color-muted);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
+  line-height: 1.25;
 }
 
 /* ---- Main ----------------------------------------------------------------------------- */
 
-.main {
-  display: flex;
-  flex-direction: column;
-  min-inline-size: 0;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-6) 0;
-}
-
 .content {
+  position: relative;
+  z-index: 1;
   flex: 1;
-  padding: var(--space-4) var(--space-6) var(--space-7);
+  padding: var(--space-5) var(--space-6) var(--space-7);
 }
 
 .content__inner {
-  max-inline-size: 1480px;
+  max-inline-size: var(--content-width);
   margin-inline: auto;
+}
+
+/* The carousel reaches past the side padding, so the home screen clips what overflows. */
+.shell--home .content {
+  padding-block: var(--space-2) 0;
+  overflow-x: clip;
 }
 
 /* ---- Full-page messages: sign-in, access denied, not found, coming soon ---------------- */
@@ -265,21 +211,17 @@
   }
 }
 
-/* ---- Tablet and below: the sidebar becomes an icon rail -------------------------------- */
+/* ---- Tablet and below: the bar keeps the mark, the buttons and the avatar --------------- */
 
 @media (max-width: 1024px) {
-  .shell {
-    grid-template-columns: var(--sidebar-rail) minmax(0, 1fr);
+  .topbar,
+  .content {
+    padding-inline: var(--space-4);
   }
+}
 
-  .sidebar {
-    align-items: center;
-    padding-inline: var(--space-2);
-  }
-
+@media (max-width: 720px) {
   .brand__text,
-  .nav__text,
-  .nav__tag,
   .user {
     position: absolute;
     inline-size: 1px;
@@ -287,31 +229,10 @@
     overflow: hidden;
     clip-path: inset(50%);
   }
-
-  .nav__link {
-    justify-content: center;
-    padding: 12px;
-  }
-
-  .sidebar__footer {
-    padding: 6px;
-    border: 0;
-    background: none;
-  }
-
-  .topbar,
-  .content {
-    padding-inline: var(--space-4);
-  }
 }
 
 @media print {
-  .sidebar,
   .topbar {
     display: none;
-  }
-
-  .shell {
-    display: block;
   }
 }

@@ -3,7 +3,9 @@ import { canView } from '@/features/session/api/sessionRepository';
 import type { CentreRow } from '@/features/vas/api/vasRepository';
 import { isEmptyReport, isVasSection } from '@/features/vas/useVasViewModel';
 import { parseFilters } from '@/shared/hooks/useReportFilters';
+import { ringOffset } from '@/shared/components/Carousel3D';
 import { toReportQuery, type BreakdownRow } from '@/shared/models/reporting';
+import { carriedSearch } from '@/shared/utils/carriedFilters';
 import { toApprovalRateBars, toOutcomeSlices, toTrendData, toVolumeBars } from '@/shared/utils/chartMappers';
 import {
   formatByUnit,
@@ -20,6 +22,21 @@ import { pageCentres } from '../support/centrePaging';
 import { fixtureExecutiveSummaryRepository, fixtureVasRepository } from '../support/fixtureRepositories';
 
 const parse = (query: string) => parseFilters(new URLSearchParams(query));
+
+describe('carousel ring', () => {
+  it('places each item the shortest way round from the front one', () => {
+    expect([0, 1, 2, 3, 4, 5].map((index) => ringOffset(index, 0, 6))).toEqual([0, 1, 2, -3, -2, -1]);
+    expect([0, 1, 2, 3, 4, 5].map((index) => ringOffset(index, 5, 6))).toEqual([1, 2, -3, -2, -1, 0]);
+    expect([0, 1, 2].map((index) => ringOffset(index, 1, 3))).toEqual([-1, 0, 1]);
+  });
+});
+
+describe('carried filters', () => {
+  it('keeps the report filters and drops everything else', () => {
+    expect(carriedSearch('?country=AE&section=revenue&period=90&page=2')).toBe('country=AE&period=90');
+    expect(carriedSearch('')).toBe('');
+  });
+});
 
 describe('filters from the URL', () => {
   it('defaults to the last 30 days with comparison on and nothing else set', () => {

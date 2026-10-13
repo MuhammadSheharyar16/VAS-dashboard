@@ -14,10 +14,14 @@ test('an executive signs in, reads the summary, filters it, then explores the VA
   // Opening the app asks for a sign-in first; only then is the dashboard shown.
   await page.goto('/');
 
-  // The home route is the Executive Summary, with the menu the backend returned.
+  // The home screen greets the user and shows the areas the backend returned on the carousel.
+  await expect(page.getByRole('heading', { level: 1, name: 'Welcome, Test' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Reporting areas' }).getByRole('link')).toHaveCount(6);
+
+  // The card at the front opens its report.
+  await page.getByRole('link', { name: /^Executive Summary/ }).click();
   await expect(page).toHaveURL(/\/executive-summary$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Executive Summary' })).toBeVisible();
-  await expect(page.getByRole('navigation', { name: 'Reporting areas' }).getByRole('link')).toHaveCount(6);
   await expect(page.getByText('Mock data')).toBeVisible();
 
   // Six KPI cards, each with a value.
@@ -34,8 +38,13 @@ test('an executive signs in, reads the summary, filters it, then explores the VA
   await page.reload();
   await expect(page.getByLabel('Country')).toHaveValue('AE');
 
-  // The filter travels with the user to the VAS report.
-  await page.getByRole('link', { name: 'VAS' }).click();
+  // The filter travels with the user, by way of the home screen, to the VAS report.
+  await page.getByRole('link', { name: 'All areas' }).click();
+  await expect(page).toHaveURL(/\/\?country=AE$/);
+  // A card behind comes to the front on the first click and opens on the next.
+  await page.getByRole('link', { name: /^VAS/ }).click();
+  await expect(page).toHaveURL(/\/\?country=AE$/);
+  await page.getByRole('link', { name: /^VAS/ }).click();
   await expect(page).toHaveURL(/\/vas\?.*country=AE/);
   await expect(page.getByRole('heading', { level: 1, name: 'VAS' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'By country' })).toBeVisible();
@@ -58,8 +67,10 @@ test('an executive signs in, reads the summary, filters it, then explores the VA
   await page.getByRole('button', { name: 'Next page' }).click();
   await expect(page.getByText('Page 2 of 2')).toBeVisible();
 
-  // A planned area shows its placeholder.
-  await page.getByRole('link', { name: /Finance/ }).click();
+  // A planned area is behind the ring until the carousel is turned to it; it shows its placeholder.
+  await page.getByRole('link', { name: 'All areas' }).click();
+  await page.getByRole('button', { name: 'Show Finance' }).click();
+  await page.getByRole('link', { name: /^Finance/ }).click();
   await expect(page.getByRole('heading', { name: 'Finance is coming soon' })).toBeVisible();
 
   // Every report came from the API, and every call carried the token from the sign-in.
