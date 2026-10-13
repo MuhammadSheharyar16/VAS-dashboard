@@ -9,7 +9,7 @@ public static class ApiBehaviorExtensions
 {
     public static IServiceCollection AddApiControllers(this IServiceCollection services)
     {
-        services.AddControllers()
+        services.AddControllers(options => options.ModelBinderProviders.Insert(0, new IsoDateModelBinderProvider()))
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
             .ConfigureApiBehaviorOptions(options =>

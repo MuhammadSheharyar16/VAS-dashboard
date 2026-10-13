@@ -95,6 +95,9 @@ public class ExecutiveSummaryApiTests(ApiFactory factory) : IClassFixture<ApiFac
 
     [Theory]
     [InlineData("from=not-a-date", "from")]
+    [InlineData("from=06/01/2026&toExclusive=2026-06-11", "from")]
+    [InlineData("from=2026-06-01T10:00:00&toExclusive=2026-06-11", "from")]
+    [InlineData("from=2026-06-01&toExclusive=June 11 2026", "toExclusive")]
     [InlineData("from=2026-09-01&toExclusive=2026-08-01", "from")]
     [InlineData("from=2024-01-01&toExclusive=2026-06-01", "from")]
     [InlineData("countryCode=ZZ", "countryCode")]

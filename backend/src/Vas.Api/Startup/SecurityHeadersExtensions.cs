@@ -23,6 +23,12 @@ public static class SecurityHeadersExtensions
                 headers.XFrameOptions = "DENY";
                 headers["Referrer-Policy"] = "no-referrer";
                 headers.ContentSecurityPolicy = ContentSecurityPolicy;
+
+                // Report data is for the signed-in executive only; no browser or proxy may keep a copy.
+                if (context.Request.Path.StartsWithSegments("/api"))
+                {
+                    headers.CacheControl = "no-store";
+                }
                 return Task.CompletedTask;
             });
 

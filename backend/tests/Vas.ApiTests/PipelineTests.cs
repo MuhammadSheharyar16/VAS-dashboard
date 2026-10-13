@@ -74,6 +74,15 @@ public class PipelineTests(ApiFactory factory) : IClassFixture<ApiFactory>
     }
 
     [Fact]
+    public async Task Api_responses_must_not_be_stored_by_the_browser_or_a_proxy()
+    {
+        var response = await factory.CreateClientWithToken(TestTokens.Viewer()).GetAsync("/api/v1/executive-summary");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.True(response.Headers.CacheControl?.NoStore);
+    }
+
+    [Fact]
     public async Task Unknown_api_route_without_a_token_gets_401_not_404()
     {
         var response = await _client.GetAsync(UnknownApiUrl);
