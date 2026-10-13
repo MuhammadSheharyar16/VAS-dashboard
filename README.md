@@ -16,7 +16,7 @@ A React dashboard and an ASP.NET Core reporting API, shipped as one container on
 | Container image | Builds and runs; `/healthz` verified inside it |
 | React frontend (`frontend/`) | Done on mock fixtures: shell, Executive Summary, VAS with six sections, Coming Soon, access-denied and not-found pages |
 | Real sign-in in the browser | Written (MSAL React), never run against a tenant |
-| Fabric connection | Waits for the Gold layer |
+| Fabric connection | Waits for the Gold layer ([docs/fabric-setup.md](docs/fabric-setup.md)) |
 
 ## Layout
 
@@ -163,7 +163,7 @@ Settings come from `backend/src/Vas.Api/appsettings.json` and are overridden by 
 | `AzureAd__AllowedTenantIds` | Optional: more tenants to limit sign-in to, comma-separated | Empty |
 | `AzureAd__RequiredScope` | Scope the token must carry | `Dashboard.Read` |
 | `Reporting__DataSource` | `Mock` or `Fabric` | `Fabric` (`Mock` in Development) |
-| `Fabric__SqlEndpoint` | Host name of the SQL analytics endpoint | Empty; required for `Fabric` |
+| `Fabric__SqlEndpoint` | Host name of the SQL analytics endpoint ([docs/fabric-setup.md](docs/fabric-setup.md)) | Empty; required for `Fabric` |
 | `Fabric__Database` | Database to connect to | Empty; required for `Fabric` |
 | `Fabric__CommandTimeoutSeconds` | Query timeout | `30` |
 | `KpiThresholds__...` | Status thresholds per KPI | Placeholders |
