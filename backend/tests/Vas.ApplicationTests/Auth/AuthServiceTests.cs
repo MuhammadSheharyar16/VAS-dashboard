@@ -73,6 +73,25 @@ public class AuthServiceTests
     }
 
     [Fact]
+    public void Configured_tenants_limit_sign_in_and_none_means_any_organisation()
+    {
+        const string partner = "55555555-5555-5555-5555-555555555555";
+        var any = new EntraOptions();
+        var single = new EntraOptions { TenantId = "tenant" };
+        var multi = new EntraOptions { TenantId = "tenant", AllowedTenantIds = $" {partner}, TENANT ," };
+
+        Assert.Empty(any.AllowedTenants);
+        Assert.Equal("https://login.microsoftonline.com/organizations", any.Authority);
+        Assert.Equal(["tenant"], single.AllowedTenants);
+        Assert.Equal("https://login.microsoftonline.com/tenant", single.Authority);
+        Assert.Equal(["tenant", partner], multi.AllowedTenants);
+        Assert.Equal("https://login.microsoftonline.com/organizations", multi.Authority);
+        Assert.Equal($"https://login.microsoftonline.com/{partner}", new EntraOptions { AllowedTenantIds = partner }.Authority);
+        Assert.False(multi.HasValidAllowedTenantIds());
+        Assert.True(new EntraOptions { TenantId = "tenant", AllowedTenantIds = partner }.HasValidAllowedTenantIds());
+    }
+
+    [Fact]
     public void Viewer_role_grants_view_on_the_active_screens_only()
     {
         string[] roles = [AppRoles.Viewer];

@@ -76,7 +76,7 @@ describe('readEnv', () => {
 });
 
 describe('loadRuntimeConfig', () => {
-  const config = { tenantId: 't', clientId: 'c', authority: 'https://login.example.test/t', apiScope: 'api://a/Dashboard.Read' };
+  const config = { clientId: 'c', authority: 'https://login.example.test/t', apiScope: 'api://a/Dashboard.Read' };
 
   it('returns the sign-in settings the API serves', async () => {
     const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify(config)));

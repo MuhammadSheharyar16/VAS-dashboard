@@ -157,9 +157,10 @@ Settings come from `backend/src/Vas.Api/appsettings.json` and are overridden by 
 
 | Setting | Purpose | Default |
 | --- | --- | --- |
-| `AzureAd__TenantId` | Entra tenant | All-zero placeholder |
 | `AzureAd__ClientId` | The API app registration | All-zero placeholder |
 | `AzureAd__SpaClientId` | The React app registration | All-zero placeholder |
+| `AzureAd__TenantId` | Optional: a tenant to limit sign-in to ([docs/entra-setup.md](docs/entra-setup.md)) | Empty (any organisation) |
+| `AzureAd__AllowedTenantIds` | Optional: more tenants to limit sign-in to, comma-separated | Empty |
 | `AzureAd__RequiredScope` | Scope the token must carry | `Dashboard.Read` |
 | `Reporting__DataSource` | `Mock` or `Fabric` | `Fabric` (`Mock` in Development) |
 | `Fabric__SqlEndpoint` | Host name of the SQL analytics endpoint | Empty; required for `Fabric` |
@@ -171,7 +172,7 @@ Settings come from `backend/src/Vas.Api/appsettings.json` and are overridden by 
 | `APPLICATIONINSIGHTS_CONNECTION_STRING` | Turns telemetry on | Unset (off) |
 | `ASPNETCORE_FORWARDEDHEADERS_ENABLED` | Trust the proxy's scheme and client address | `true` in the image |
 
-Outside Development the API refuses to start while an Entra ID is still the placeholder, or while a setting is invalid.
+Outside Development the API refuses to start while an Entra client ID is still the placeholder, or while a setting is invalid.
 
 ## Conventions
 

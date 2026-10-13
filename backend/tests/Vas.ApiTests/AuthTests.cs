@@ -1,6 +1,11 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Vas.ApiTests.Support;
 using Vas.Application.Features.Auth.DTOs;
 using Vas.Shared.Constants;
@@ -150,11 +155,98 @@ public class AuthTests(ApiFactory factory) : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var config = await response.Content.ReadFromJsonAsync<ClientConfigDto>();
         Assert.NotNull(config);
-        Assert.Equal(TestTokens.TenantId, config.TenantId);
         Assert.Equal(TestTokens.SpaClientId, config.ClientId);
         Assert.Equal($"https://login.microsoftonline.com/{TestTokens.TenantId}", config.Authority);
         Assert.Equal($"api://{TestTokens.ApiClientId}/{TestTokens.Scope}", config.ApiScope);
     }
+
+    [Fact]
+    public async Task Token_from_another_tenant_gets_401_when_no_other_tenant_is_allowed()
+    {
+        var token = TestTokens.Create(roles: [AppRoles.Viewer], tenantId: TestTokens.PartnerTenantId);
+
+        var response = await factory.CreateClientWithToken(token).GetAsync(MeUrl);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(TestTokens.TenantId, HttpStatusCode.OK)]
+    [InlineData(TestTokens.PartnerTenantId, HttpStatusCode.OK)]
+    [InlineData(TestTokens.UnknownTenantId, HttpStatusCode.Unauthorized)]
+    public async Task With_an_allowed_partner_tenant_only_the_listed_tenants_get_in(
+        string tenantId, HttpStatusCode expected)
+    {
+        var token = TestTokens.Create(roles: [AppRoles.Viewer], tenantId: tenantId);
+
+        using var client = WithPartnerTenant().CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(MeUrl);
+
+        Assert.Equal(expected, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Partner_tenant_user_without_the_viewer_role_gets_403()
+    {
+        var token = TestTokens.Create(roles: [], tenantId: TestTokens.PartnerTenantId);
+
+        using var client = WithPartnerTenant().CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var response = await client.GetAsync(MeUrl);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task With_an_allowed_partner_tenant_sign_in_and_validation_use_the_multi_tenant_endpoint()
+    {
+        var multiTenant = WithPartnerTenant();
+
+        var config = await multiTenant.CreateClient().GetFromJsonAsync<ClientConfigDto>("/config.json");
+        var bearer = multiTenant.Services
+            .GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
+            .Get(JwtBearerDefaults.AuthenticationScheme);
+
+        Assert.NotNull(config);
+        Assert.Equal("https://login.microsoftonline.com/organizations", config.Authority);
+        Assert.Equal("https://login.microsoftonline.com/organizations/v2.0", bearer.Authority);
+    }
+
+    [Fact]
+    public void Startup_fails_when_an_allowed_tenant_id_is_not_a_guid()
+    {
+        var broken = factory.WithWebHostBuilder(
+            builder => builder.UseSetting("AzureAd:AllowedTenantIds", "contoso.example"));
+
+        var exception = Assert.ThrowsAny<Exception>(() => broken.CreateClient());
+        Assert.Contains("AllowedTenantIds", exception.ToString());
+    }
+
+    [Theory]
+    [InlineData(TestTokens.PartnerTenantId)]
+    [InlineData(TestTokens.UnknownTenantId)]
+    public async Task With_no_tenant_configured_any_organisation_gets_in_and_the_role_still_decides(string tenantId)
+    {
+        var anyOrganisation = factory.WithWebHostBuilder(builder => builder.UseSetting("AzureAd:TenantId", ""));
+        using var viewer = anyOrganisation.CreateClient();
+        viewer.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "Bearer", TestTokens.Create(roles: [AppRoles.Viewer], tenantId: tenantId));
+        using var withoutRole = anyOrganisation.CreateClient();
+        withoutRole.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            "Bearer", TestTokens.Create(roles: [], tenantId: tenantId));
+
+        var config = await anyOrganisation.CreateClient().GetFromJsonAsync<ClientConfigDto>("/config.json");
+
+        Assert.Equal(HttpStatusCode.OK, (await viewer.GetAsync(MeUrl)).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await withoutRole.GetAsync(MeUrl)).StatusCode);
+        Assert.NotNull(config);
+        Assert.Equal("https://login.microsoftonline.com/organizations", config.Authority);
+    }
+
+    private WebApplicationFactory<Program> WithPartnerTenant() =>
+        factory.WithWebHostBuilder(
+            builder => builder.UseSetting("AzureAd:AllowedTenantIds", TestTokens.PartnerTenantId));
 
     [Fact]
     public void Startup_fails_outside_development_when_the_entra_ids_are_placeholders()

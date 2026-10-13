@@ -124,6 +124,7 @@ The Fabric Gold layer is **not available yet**. Development, demos and automated
 - **Token cache in the browser:** MSAL `sessionStorage`. Never `localStorage`. Tokens are never logged.
 - **API checks:** signature, issuer, audience, expiry, required scope and the dashboard access policy. Filters are validated before any data access. A client's country or centre selection is never treated as proof of permission.
 - **Access policy:** only assigned executives, through one Entra app role, `VasDashboard.Viewer`. All authorised executives see every country and centre (planning assumption; data owner must confirm).
+- **Tenants (decision 29):** no tenant ID has to be configured. By default the API accepts a token from any Entra organisation and the scope and role decide access; the role is assigned in each organisation by its own administrator. Setting `AzureAd__TenantId` and/or `AzureAd__AllowedTenantIds` limits sign-in to those tenants, and a token from any other tenant is refused (401). Sign-in only: every authorised user sees the same data, whatever their organisation.
 - **No authentication bypass in the API,** in any environment. Until an Entra tenant and app registrations are available, the API is verified with test tokens in `Vas.ApiTests`; real sign-in (M1) is verified when the IDs arrive.
 - **Backend to Fabric:** the App Service **system-assigned managed identity**. No Fabric client secret, no separate credential-based Fabric app registration.
 - **Local development to Fabric:** the developer's own Entra account through `az login`. No service principal secret.
@@ -304,6 +305,7 @@ Closed on 12 Oct 2026: 7 (no Figma; own designs), 8 (English only), 9 (Recharts)
 | 26 | This file lives at the repository root; no commits or pushes unless asked |
 | 27 | Backend code lives in a `backend/` folder, not at the repository root |
 | 28 | 13 Oct 2026: the frontend has no mock mode and no fake user. Every run signs in with Entra ID and calls the API; mock data comes only from the API in Development (`DataSource=Mock`). Local development uses Dev app registrations in the LogicEra tenant, with the IDs supplied at run time from a git-ignored `.env` |
+| 29 | 13 Oct 2026: multi-tenant sign-in with no tenant ID configured. Any Entra organisation whose user signs in and holds `VasDashboard.Viewer` is accepted; `AzureAd__TenantId` and `AzureAd__AllowedTenantIds` are optional and limit sign-in to the tenants they name. Sign-in only: no per-tenant data separation. `/config.json` no longer carries a tenant ID |
 
 **Made by Claude during implementation, 12 Oct 2026. Not yet confirmed by Sheharyar.**
 

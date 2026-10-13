@@ -8,6 +8,9 @@ public static class EntraClaims
     public static string? ObjectId(ClaimsPrincipal user) =>
         First(user, EntraClaimTypes.ObjectId, EntraClaimTypes.ObjectIdUri);
 
+    public static string? TenantId(ClaimsPrincipal user) =>
+        First(user, EntraClaimTypes.TenantId, EntraClaimTypes.TenantIdUri);
+
     public static string? DisplayName(ClaimsPrincipal user) =>
         First(user, EntraClaimTypes.Name, ClaimTypes.Name);
 

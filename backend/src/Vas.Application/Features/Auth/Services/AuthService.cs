@@ -51,7 +51,7 @@ public sealed class AuthService(ICurrentUser currentUser, IOptions<EntraOptions>
     {
         var entra = entraOptions.Value;
 
-        return new ClientConfigDto(entra.TenantId, entra.SpaClientId, entra.Authority, entra.ApiScope);
+        return new ClientConfigDto(entra.SpaClientId, entra.Authority, entra.ApiScope);
     }
 
     private void EnsureAuthenticated()

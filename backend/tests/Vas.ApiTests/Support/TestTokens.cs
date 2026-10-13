@@ -14,6 +14,8 @@ public static class TestTokens
 {
     public const string Issuer = "https://test-issuer.local/v2.0";
     public const string TenantId = "11111111-1111-1111-1111-111111111111";
+    public const string PartnerTenantId = "55555555-5555-5555-5555-555555555555";
+    public const string UnknownTenantId = "66666666-6666-6666-6666-666666666666";
     public const string ApiClientId = "22222222-2222-2222-2222-222222222222";
     public const string SpaClientId = "33333333-3333-3333-3333-333333333333";
     public const string Scope = "Dashboard.Read";
@@ -30,12 +32,13 @@ public static class TestTokens
         string? scope = Scope,
         string audience = ApiClientId,
         DateTime? expires = null,
-        bool signWithUntrustedKey = false)
+        bool signWithUntrustedKey = false,
+        string tenantId = TenantId)
     {
         var claims = new List<Claim>
         {
             new("oid", UserObjectId),
-            new("tid", TenantId),
+            new("tid", tenantId),
             new("ver", "2.0"),
             new("name", "Test Executive"),
             new("preferred_username", "executive@example.test"),

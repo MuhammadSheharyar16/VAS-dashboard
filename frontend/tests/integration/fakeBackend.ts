@@ -176,7 +176,7 @@ export async function installFakeBackend(page: Page): Promise<ApiCall[]> {
   const state = { nonce: '' };
 
   await page.route('**/config.json', (route) =>
-    json(route, { tenantId: TENANT_ID, clientId: SPA_CLIENT_ID, authority: AUTHORITY, apiScope: API_SCOPE }),
+    json(route, { clientId: SPA_CLIENT_ID, authority: AUTHORITY, apiScope: API_SCOPE }),
   );
   await page.route(`${ENTRA_HOST}/**`, (route) => fakeEntra(route, state));
   await page.route('**/api/v1/**', (route) => fakeApi(route, calls));
