@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   useCallback,
-  useEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -11,7 +10,6 @@ import {
   type PointerEvent,
   type ReactNode,
 } from 'react';
-import { useFinePointer, useReducedMotion } from '@/shared/hooks/useMotionPreference';
 import { usePointerParallax } from '@/shared/hooks/usePointerParallax';
 import './carousel3d.css';
 
@@ -56,12 +54,6 @@ const POSES: Pose[] = [
 
 const SWIPE_DISTANCE = 48;
 
-/** How long the mouse must hold still on an item behind before the ring turns to it. Passing over does nothing. */
-const HOVER_REST_MS = 200;
-/** After a turn the ring waits this long, and for the pointer to travel this far, before turning again. */
-const HOVER_PAUSE_MS = 750;
-const HOVER_TRAVEL = 28;
-
 function poseFor(offset: number): Pose {
   const distance = Math.min(Math.abs(offset), POSES.length - 1);
   const pose = POSES[distance] ?? POSES[0]!;
@@ -90,9 +82,8 @@ export function ringOffset(index: number, active: number, count: number): number
 }
 
 /**
- * Items on a ring in 3D: one at the front, its neighbours turned away behind it. Moving the mouse
- * onto an item behind, or clicking it, brings it to the front, and only the front item acts on a
- * click. The ring also turns with the arrow buttons, the arrow keys, a swipe or drag, and the
+ * Items on a ring in 3D: one at the front, its neighbours turned away behind it. Clicking an item
+ * behind brings it to the front, and only the front item acts on a click. The ring also turns with the arrow buttons, the arrow keys, a swipe or drag, and the
  * position dots, and follows keyboard focus so a focused item is always at the front.
  */
 export function Carousel3D<T>({
@@ -112,10 +103,6 @@ export function Carousel3D<T>({
   const stageRef = useRef<HTMLDivElement>(null);
   const slotRefs = useRef<(HTMLLIElement | null)[]>([]);
   const drag = useRef({ startX: 0, pointerId: -1, moved: false });
-  const hover = useRef({ timer: 0, turnedAt: 0, turnedX: 0, turnedY: 0, seenX: -1, seenY: -1 });
-  const finePointer = useFinePointer();
-  const reducedMotion = useReducedMotion();
-  const turnsOnHover = finePointer && !reducedMotion;
 
   usePointerParallax(stageRef);
 
@@ -177,53 +164,11 @@ export function Carousel3D<T>({
     }
   };
 
-  const cancelHover = useCallback(() => {
-    window.clearTimeout(hover.current.timer);
-    hover.current.timer = 0;
-  }, []);
-
-  useEffect(() => cancelHover, [cancelHover]);
-
-  /**
-   * The mouse resting on an item behind turns the ring to it. The turn carries another item under
-   * the pointer, so the next turn waits for a pause and for the pointer to really move again;
-   * otherwise the ring would keep spinning under a mouse that is standing still.
-   */
-  const handleHover = (event: PointerEvent<HTMLLIElement>, index: number) => {
-    const state = hover.current;
-    if (!turnsOnHover || event.pointerType !== 'mouse' || event.buttons !== 0 || index === active) {
-      return;
-    }
-
-    // When an item slides under a mouse that is standing still, the browser reports a movement
-    // with the same position as before. That is the ring moving, not the mouse.
-    const stoodStill = event.clientX === state.seenX && event.clientY === state.seenY;
-    state.seenX = event.clientX;
-    state.seenY = event.clientY;
-    if (stoodStill) {
-      return;
-    }
-
-    const travelled = Math.hypot(event.clientX - state.turnedX, event.clientY - state.turnedY);
-    if (event.timeStamp - state.turnedAt < HOVER_PAUSE_MS || travelled < HOVER_TRAVEL) {
-      return;
-    }
-
-    // Every movement starts the wait again, so the turn comes only once the mouse has stopped.
-    const { clientX, clientY } = event;
-    window.clearTimeout(state.timer);
-    state.timer = window.setTimeout(() => {
-      hover.current = { ...hover.current, timer: 0, turnedAt: performance.now(), turnedX: clientX, turnedY: clientY };
-      setActive(index);
-    }, HOVER_REST_MS);
-  };
-
   /** A click on an item that is not at the front turns the ring to it and goes no further. */
   const bringToFront = (event: MouseEvent<HTMLLIElement>, index: number) => {
     if (index !== active) {
       event.preventDefault();
       event.stopPropagation();
-      cancelHover();
       setActive(index);
     }
   };
@@ -269,8 +214,6 @@ export function Carousel3D<T>({
                 data-hidden={pose.opacity === 0}
                 style={slotStyle(pose, count - Math.abs(offset), Math.abs(offset))}
                 onClickCapture={(event) => bringToFront(event, index)}
-                onPointerMove={(event) => handleHover(event, index)}
-                onPointerLeave={cancelHover}
                 onFocus={(event) => followKeyboardFocus(event, index)}
               >
                 <div className="carousel3d__enter">

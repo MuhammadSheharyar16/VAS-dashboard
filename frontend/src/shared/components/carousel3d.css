@@ -32,11 +32,10 @@
   list-style: none;
   transform-style: preserve-3d;
   /*
-    The ring follows the pointer from side to side: it swings round and slides the other way, so
-    the items on the side the pointer moves to come forward to meet it.
+    The ring stays centred in its own area: it only tilts a little as the pointer moves up and
+    down, and never slides or swings from side to side with it.
   */
-  transform: scale(var(--carousel-scale)) translate3d(calc(var(--parallax-x, 0) * -110px), 0, 0)
-    rotateX(calc(var(--parallax-y, 0) * -3deg)) rotateY(calc(var(--parallax-x, 0) * -8deg));
+  transform: scale(var(--carousel-scale)) rotateX(calc(var(--parallax-y, 0) * -3deg));
   transform-origin: 50% 0;
   transition: transform 900ms var(--ease-out);
   touch-action: pan-y;
